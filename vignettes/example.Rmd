@@ -1,0 +1,87 @@
+---
+title: "Arkas: Repetitive Elements Quantification In Much Less Time"
+author: "Timothy Triche Jr., Anthony Colombo, Harold Pimmentel"
+output: 
+  html_vignette:
+  toc: true
+  number_sections: true
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteDepends{arkasData}
+  %\VignetteIndexEntry{Arkas: Repetitive Elements Quantification In Much Less Time}
+  \usepackage[utf8]{inputenc}   
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+---
+
+# example
+ This shows how to construct and IMCexperiment object.
+  need to make sure that the number of rows from spatial match number of rows of expression.
+  the sizes need to be checked.
+
+```{r}
+
+  x<-imcExperiment(cellIntensity=matrix(1,nrow=10,ncol=10),
+	spatial=matrix(1,nrow=10,ncol=2),
+	neighborHood=matrix(1,nrow=10,ncol=10),
+	network=matrix(1,nrow=10,ncol=10),
+	uniqueLabel=rep("A",10))
+
+ x<-imcExperiment(cellIntensity=matrix(1,nrow=7,ncol=10),
+	spatial=matrix(1,nrow=10,ncol=2),
+	neighborHood=matrix(1,nrow=10,ncol=10),
+	network=matrix(1,nrow=10,ncol=10),
+	uniqueLabel=rep("A",10))
+
+
+ getSpatial(x)<-matrix(0,10,2)
+ cellIntensity(x)
+
+  cellIntensity(x)<-asinh(cellIntensity(x))
+  cellIntensity(x)
+
+
+``` 
+
+### From histoCAT to R
+
+```{r}
+  ### load the data from package.
+  library(imcExperiment)
+ ##load the data 1000 cells from IMC experiment.
+  data(data)
+  dim(data)
+  ##output from histoCAT to R
+  expr<-data[,3:36]
+  normExp<-percentilenormalize(data=expr,percentile=0.99)
+  normExp<-as.matrix(normExp)
+  boxplot(normExp)
+
+  ##spatial component
+  spatial<-(data[,c("X_position","Y_position")])
+  spatial<-as.matrix(spatial)
+ ##uniqueLabel
+  uniqueLabel<-paste0(data[,"ImageId"],"_",data[,"CellId"])
+
+ phenotypes<-matrix(data[,"Phenograph4732517031"])
+
+   x<-imcExperiment(cellIntensity=normExp,
+	spatial=spatial,
+	neighborHood=phenotypes,
+	network=phenotypes,
+	uniqueLabel=uniqueLabel)
+  ### create  phenotypes via Rphenograph
+  ##run phenograph
+  require(Rphenograph)
+  phenos<-Rphenograph(cellIntensity(x),k=35)
+   pheno.labels<-as.numeric(membership(phenos[[2]]))
+   getNetwork(x)<-matrix(pheno.labels)
+    getNetwork(x)
+  ##plot phenograph
+  plot_clustering_heatmap_wrapper(myExperiment=x)
+
+ ### 1-NN and ripley's K analysis.
+
+
+ 
+
+```
