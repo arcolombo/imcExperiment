@@ -1,6 +1,6 @@
 ---
-title: "Arkas: Repetitive Elements Quantification In Much Less Time"
-author: "Timothy Triche Jr., Anthony Colombo, Harold Pimmentel"
+title: "imcExperiment: containerization of IMC data"
+author: "Anthony Colombo, Erik Gerdtsson"
 output: 
   html_vignette:
   toc: true
