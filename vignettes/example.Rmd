@@ -82,6 +82,50 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
  ### 1-NN and ripley's K analysis.
 
 
+
+### reading in a directory of histoCAT csv files.
+
+ ##need to reconstruct the fold revised IMC data.
+  ##merges a folder full of histoCAT csv files.
+  dataSet<-NULL
+ for(i in c("case8.csv","case5.csv")){
+  message(i)
+    fpath <- system.file("extdata", i, package="imcExperiment")
+    case1<-read.csv(fpath)
+   proteins<-colnames(case1)[grepl("Cell_",colnames(case1))]
+    case1<-case1[,c("ImageId","CellId","X_position","Y_position",proteins)]
+    dataSet<-rbind(dataSet,case1)
+  }
  
+ expr<-dataSet[,proteins]
+  normExp<-percentilenormalize(data=expr,percentile=0.99)
+  normExp<-as.matrix(normExp)
+  boxplot(normExp)
+
+  ##spatial component
+  spatial<-(dataSet[,c("X_position","Y_position")])
+  spatial<-as.matrix(spatial)
+ ##uniqueLabel
+  uniqueLabel<-paste0(dataSet[,"ImageId"],"_",dataSet[,"CellId"])
+
+  ##not yet assigned
+ phenotypes<-matrix(0,nrow(dataSet),1)
+
+   x<-imcExperiment(cellIntensity=normExp,
+        spatial=spatial,
+        neighborHood=phenotypes,
+        network=phenotypes,
+        uniqueLabel=uniqueLabel)
+
+ ##store the ROIID in the metadata columns.
+  metadata(x)<-list(ROIID=data.frame(dataSet$ImageId))
+  ##access the unique cell labels.
+  getLabel(x)
+
+
+
+
+
+
 
 ```

@@ -116,4 +116,18 @@ setMethod("getNetwork<-",c("imcExperiment", "matrix"),
              })
 
 
+#' finds the label information.
+#' @name imcExperiment-class
+#'
+#' @rdname imcExperiment-class
+#' @param object imcExperiment
+#' @export
+setGeneric("getLabel",
+           function(object) standardGeneric("getLabel"))
+#' @rdname imcExperiment-class
+#' @aliases spatial imcExperiment-method
+#' @export
+setMethod("getLabel", "imcExperiment",
+          function (object) return(object@uniqueLabel))
+
 
