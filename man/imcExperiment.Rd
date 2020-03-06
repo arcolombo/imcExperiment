@@ -9,7 +9,8 @@ expressions and spatial assays.}
 \usage{
 imcExperiment(spatial = matrix(1, 3, 3), cellIntensity = matrix(1, 3,
   3), neighborHood = matrix(1, 3, 3), network = matrix(1, 3, 3),
-  uniqueLabel = rep("A", 3), ...)
+  uniqueLabel = rep("A", 3), ROIID = data.frame(ROIID = rep("A", 3)),
+  ...)
 }
 \arguments{
 \item{spatial}{coordinate data}
