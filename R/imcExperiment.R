@@ -15,8 +15,10 @@ imcExperiment<-function(
 	neighborHood=matrix(1,3,3),
 	network=matrix(1,3,3),
 	uniqueLabel=rep("A",3),
+	ROIID=data.frame(ROIID=rep("A",3)),
 	...){
    se<-SummarizedExperiment(list(exprs=cellIntensity))
+   rowData(se)<-ROIID
    .imcExperiment(se,
 	spatial=spatial,
 	neighborHood=neighborHood,

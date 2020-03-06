@@ -9,11 +9,16 @@
 \alias{cellIntensity<-,imcExperiment,matrix-method}
 \alias{pData,imcExperiment-method}
 \alias{getSpatial,imcExperiment-method}
-\alias{spatial}
+\alias{getSpatial}
 \alias{imcExperiment-method}
 \alias{getSpatial<-,imcExperiment,matrix-method}
+\alias{spatial}
 \alias{getNetwork,imcExperiment-method}
+\alias{getNetwork}
 \alias{getNetwork<-,imcExperiment,matrix-method}
+\alias{getLabel,imcExperiment-method}
+\alias{getLabel}
+\alias{subsetCase,imcExperiment-method}
 \title{a summarized experiment of IMC runs}
 \usage{
 \S4method{cellIntensity}{imcExperiment}(object)
@@ -33,8 +38,20 @@ getNetwork(object)
 \S4method{getNetwork}{imcExperiment}(object)
 
 \S4method{getNetwork}{imcExperiment,matrix}(object) <- value
+
+getLabel(object)
+
+\S4method{getLabel}{imcExperiment}(object)
+
+subsetCase(object, value)
+
+\S4method{subsetCase}{imcExperiment}(object, value)
 }
 \arguments{
+\item{object}{imcExperiment}
+
+\item{object}{imcExperiment}
+
 \item{object}{imcExperiment}
 
 \item{object}{imcExperiment}
