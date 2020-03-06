@@ -1,6 +1,6 @@
 ---
-title: "Arkas: Repetitive Elements Quantification In Much Less Time"
-author: "Timothy Triche Jr., Anthony Colombo, Harold Pimmentel"
+title: "imcExperiment: containerization of IMC data"
+author: "Anthony Colombo, Erik Gerdtsson"
 output: 
   html_vignette:
   toc: true
@@ -24,13 +24,15 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 	spatial=matrix(1,nrow=10,ncol=2),
 	neighborHood=matrix(1,nrow=10,ncol=10),
 	network=matrix(1,nrow=10,ncol=10),
-	uniqueLabel=rep("A",10))
+	uniqueLabel=rep("A",10),
+	ROIID=data.frame(ROIID=rep("A",10)))
 
  x<-imcExperiment(cellIntensity=matrix(1,nrow=7,ncol=10),
 	spatial=matrix(1,nrow=10,ncol=2),
 	neighborHood=matrix(1,nrow=10,ncol=10),
 	network=matrix(1,nrow=10,ncol=10),
-	uniqueLabel=rep("A",10))
+	uniqueLabel=rep("A",10),
+	ROIID=data.frame(ROIID=rep("A",10)))
 
 
  getSpatial(x)<-matrix(0,10,2)
@@ -79,9 +81,70 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
   ##plot phenograph
   plot_clustering_heatmap_wrapper(myExperiment=x)
 
- ### 1-NN and ripley's K analysis.
+ ###
 
+### reading in a directory of histoCAT csv files.
 
+ ##need to reconstruct the fold revised IMC data.
+  ##merges a folder full of histoCAT csv files.
+  dataSet<-NULL
+ for(i in c("case8.csv","case5.csv")){
+  message(i)
+    fpath <- system.file("extdata", i, package="imcExperiment")
+    case1<-read.csv(fpath)
+   proteins<-colnames(case1)[grepl("Cell_",colnames(case1))]
+    case1<-case1[,c("ImageId","CellId","X_position","Y_position",proteins)]
+    dataSet<-rbind(dataSet,case1)
+  }
  
+ expr<-dataSet[,proteins]
+  normExp<-percentilenormalize(data=expr,percentile=0.99)
+  normExp<-as.matrix(normExp)
+  boxplot(normExp)
+
+  ##spatial component
+  spatial<-(dataSet[,c("X_position","Y_position")])
+  spatial<-as.matrix(spatial)
+ ##uniqueLabel
+  uniqueLabel<-paste0(dataSet[,"ImageId"],"_",dataSet[,"CellId"])
+
+  ##not yet assigned
+  phenotypes<-matrix(0,nrow(dataSet),1)
+  ROIID=data.frame(ROIID=dataSet[,"ImageId"])
+   x<-imcExperiment(cellIntensity=normExp,
+        spatial=spatial,
+        neighborHood=phenotypes,
+        network=phenotypes,
+        uniqueLabel=uniqueLabel,
+	ROIID=ROIID)
+  ##phenotype
+  ##run phenograph
+  require(Rphenograph)
+  phenos<-Rphenograph(cellIntensity(x),k=35)
+   pheno.labels<-as.numeric(membership(phenos[[2]]))
+   getNetwork(x)<-matrix(pheno.labels)
+    getNetwork(x)
+  ##plot phenograph
+  plot_clustering_heatmap_wrapper(myExperiment=x)
+
+
+ ##store the ROIID in the metadata columns.
+  ##access the unique cell labels.
+  getLabel(x)
+  
+  ##you can append more clinical features to the columns of the sampleDat data.frame.
+  H<-imcExperimentToHyperFrame(imcExperiment=x)
+  helper<-function(pp=NULL,i=NULL,j=NULL){
+  ps<-split(pp)
+  nnd<-nncross(ps[[i]],ps[[j]])
+  }
+ ## 1-NN analysis.
+  ## compare cluster 10 to cluster 9
+   eachNND<-with(H,helper(pp=point,i="10",j="8"))
+ ## first choose 2 clusters to compare.
+  sapply(eachNND,function(x) mean(x[,"dist"]))
+
+
+
 
 ```

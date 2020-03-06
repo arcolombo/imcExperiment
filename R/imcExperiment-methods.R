@@ -67,7 +67,7 @@ setMethod("pData<-",c("imcExperiment", "DataFrame"),
 setGeneric("getSpatial", 
            function(object) standardGeneric("getSpatial"))
 #' @rdname imcExperiment-class
-#' @aliases spatial imcExperiment-method
+#' @aliases getSpatial imcExperiment-method
 #' @export
 setMethod("getSpatial", "imcExperiment",
           function (object) return(object@spatial))
@@ -97,7 +97,7 @@ setMethod("getSpatial<-",c("imcExperiment", "matrix"),
 setGeneric("getNetwork", 
            function(object) standardGeneric("getNetwork"))
 #' @rdname imcExperiment-class
-#' @aliases spatial imcExperiment-method
+#' @aliases getNetwork imcExperiment-method
 #' @export
 setMethod("getNetwork", "imcExperiment",
           function (object) return(object@network))
@@ -107,13 +107,55 @@ setMethod("getNetwork", "imcExperiment",
 setGeneric("getNetwork<-",function(object,value) standardGeneric("getNetwork<-"))
 
 #' @rdname imcExperiment-class
-#' @aliases spatial imcExperiment-method
+#' @aliases getNetwork imcExperiment-method
 #' @export
 setMethod("getNetwork<-",c("imcExperiment", "matrix"),
             function(object,value){
              object@network<-value
              return(object)
              })
+
+
+#' finds the label information.
+#' @name imcExperiment-class
+#'
+#' @rdname imcExperiment-class
+#' @param object imcExperiment
+#' @export
+setGeneric("getLabel",
+           function(object) standardGeneric("getLabel"))
+#' @rdname imcExperiment-class
+#' @aliases getLabel imcExperiment-method
+#' @export
+setMethod("getLabel", "imcExperiment",
+          function (object) return(object@uniqueLabel))
+
+
+
+#' subsets the imcExperiment to a case along with all slots.
+#' @name imcExperiment-class
+#'
+#' @rdname imcExperiment-class
+#' @param object imcExperiment
+#' @export
+setGeneric("subsetCase",
+           function(object,value) standardGeneric("subsetCase"))
+
+#' method to subset the slots, requires rowData with column "ROIID"
+#' @rdname imcExperiment-class
+#' @export
+setMethod("subsetCase", "imcExperiment",
+             function(object,value){
+             id<-which(rowData(object)[,"ROIID"]==value)
+             roi<-object[id,]
+             roi@spatial<-object@spatial[id,]
+             roi@cellIntensity<-object@cellIntensity[id,]
+             roi@neighborHood<-as.matrix(object@neighborHood[id,])
+             roi@network<-as.matrix(object@network[id,])
+             roi@uniqueLabel<-object@uniqueLabel[id]
+             return(roi)
+            })
+
 
 
 
