@@ -7,15 +7,20 @@
 \alias{.imcExperiment}
 \alias{cellIntensity,imcExperiment-method}
 \alias{cellIntensity<-,imcExperiment,matrix-method}
-\alias{pData,imcExperiment-method}
-\alias{getSpatial,imcExperiment-method}
+\alias{getCoordinates,imcExperiment-method}
 \alias{getSpatial}
 \alias{imcExperiment-method}
-\alias{getSpatial<-,imcExperiment,matrix-method}
+\alias{getCoordinates<-,imcExperiment,matrix-method}
 \alias{spatial}
+\alias{getNeighborhood,imcExperiment-method}
+\alias{getNeighborhood<-,imcExperiment,matrix-method}
 \alias{getNetwork,imcExperiment-method}
 \alias{getNetwork}
 \alias{getNetwork<-,imcExperiment,matrix-method}
+\alias{getDistance,imcExperiment-method}
+\alias{getDistance<-,imcExperiment,matrix-method}
+\alias{getMorphology,imcExperiment-method}
+\alias{getMorphology<-,imcExperiment,matrix-method}
 \alias{getLabel,imcExperiment-method}
 \alias{getLabel}
 \alias{subsetCase,imcExperiment-method}
@@ -25,19 +30,35 @@
 
 \S4method{cellIntensity}{imcExperiment,matrix}(object) <- value
 
-\S4method{pData}{imcExperiment}(object)
+getCoordinates(object)
 
-getSpatial(object)
+\S4method{getCoordinates}{imcExperiment}(object)
 
-\S4method{getSpatial}{imcExperiment}(object)
+\S4method{getCoordinates}{imcExperiment,matrix}(object) <- value
 
-\S4method{getSpatial}{imcExperiment,matrix}(object) <- value
+getNeighborhood(object)
+
+\S4method{getNeighborhood}{imcExperiment}(object)
+
+\S4method{getNeighborhood}{imcExperiment,matrix}(object) <- value
 
 getNetwork(object)
 
 \S4method{getNetwork}{imcExperiment}(object)
 
 \S4method{getNetwork}{imcExperiment,matrix}(object) <- value
+
+getDistance(object)
+
+\S4method{getDistance}{imcExperiment}(object)
+
+\S4method{getDistance}{imcExperiment,matrix}(object) <- value
+
+getMorphology(object)
+
+\S4method{getMorphology}{imcExperiment}(object)
+
+\S4method{getMorphology}{imcExperiment,matrix}(object) <- value
 
 getLabel(object)
 
@@ -55,24 +76,43 @@ subsetCase(object, value)
 \item{object}{imcExperiment}
 
 \item{object}{imcExperiment}
+
+\item{object}{imcExperiment}
+
+\item{object}{imcExperiment}
+
+\item{object}{imcExperiment}
 }
 \description{
 returns the expression of IMC data
 
 returns the expression of IMC data
-
-returns the phenotypic data associated with a imcExperiment object
 }
 \section{Slots}{
 
 \describe{
-\item{\code{spatial}}{Spatial coordinate data. x,y coordinates.}
+\item{\code{coordinates}}{Spatial coordinate (rows are cells and columns are x,y coordinates.}
+
+\item{\code{cellIntensity}}{a matrix of the intensity values rows are proteins and columns are cells (SCE format)}
+
+\item{\code{neighborHood}}{a matrix (rows are cells, columns are features) of neighborhood observations from neighborhood analysis}
+
+\item{\code{network}}{a matrix (rows are cells) and columns are for network assignment information}
+
+\item{\code{distance}}{a matrix of rows are cells and columns are for distance measurements}
+
+\item{\code{uniqueLabel}}{a character for each cell for unique labeling.}
 }}
 
 \section{Slots}{
 
 \describe{
-  \item{\code{spatial}:}{data.frame class containing x,y coordinates}
+  \item{\code{coordinates}:}{matrix class containing x,y coordinates}
+  \item{\code{cellIntensity}:}{matrix class containing intensities}
+  \item{\code{neighborHood}:}{matrix class containing neighborhood results}
+  \item{\code{network}:}{matrix class containing cell assignment cluster}
+  \item{\code{distance}:}{matrix class containing cell distance observations}
+  \item{\code{uniqueLabel}:}{character class containing labels}
 }
 }
 

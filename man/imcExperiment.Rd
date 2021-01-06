@@ -5,20 +5,34 @@
 \title{Initializes a imcExperiment and performs some rudimentary checks.
 Many of the arguments CAN be NULL; determination of which is required 
 is done at run-time.  A imcExperiment must contain at least the 
-expressions and spatial assays.}
+expressions and spatial/coordinate assays.}
 \usage{
-imcExperiment(spatial = matrix(1, 3, 3), cellIntensity = matrix(1, 3,
-  3), neighborHood = matrix(1, 3, 3), network = matrix(1, 3, 3),
-  uniqueLabel = rep("A", 3), ROIID = data.frame(ROIID = rep("A", 3)),
-  ...)
+imcExperiment(coordinates = matrix(1, 3, 3), cellIntensity = matrix(1,
+  3, 3), neighborHood = matrix(1, 3, 3), network = matrix(1, 3, 3),
+  distance = matrix(1, 3, 3), morphology = matrix(1, 3, 3),
+  uniqueLabel = rep("A", 3), panel = as.character(seq(1, 3)),
+  ROIID = data.frame(ROIID = rep("A", 3)), ...)
 }
 \arguments{
-\item{spatial}{coordinate data}
+\item{coordinates}{matrix of spatial coordinates (x,y)}
 
-\item{exprs_intensity}{matrix of counts}
+\item{cellIntensity}{matrix of counts}
 
-\item{covariates}{the column metadata (covariates) for each sample}
+\item{neighborHood}{neighborhood results}
+
+\item{network}{network assignments for each cell}
+
+\item{distance}{distances for each cell, can be square}
+
+\item{morphology}{morphology features for each cell, can be square}
+
+\item{uniqueLabel}{character class each cell is assigned a uniqueLabel}
+
+\item{ROIID}{character for ROI}
 }
 \description{
-FIXME: add Harold's quasi-normalized TPM method for tx-level comparisons.
+Initializes a imcExperiment and performs some rudimentary checks.
+Many of the arguments CAN be NULL; determination of which is required 
+is done at run-time.  A imcExperiment must contain at least the 
+expressions and spatial/coordinate assays.
 }

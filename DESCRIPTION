@@ -5,6 +5,7 @@ Authors@R: person("Anthony", "Colombo", email = "anthony.colombo60@gmail.com", r
 Description: containerizes IMC data and allows for S4 class structure.
 Depends: R (>= 3.6.2),
 	SummarizedExperiment,
+	SingleCellExperiment,
 	tools
 License: MIT
 Encoding: UTF-8

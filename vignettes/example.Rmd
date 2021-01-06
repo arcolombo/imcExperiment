@@ -15,34 +15,94 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 
 # example
  This shows how to construct and IMCexperiment object.
-  need to make sure that the number of rows from spatial match number of rows of expression.
-  the sizes need to be checked.
-
+ The input to the imcExperiment object has the cells (columns) and rows are the proteins.  For spatial features, the rows are the cells, and columns are the spatial features.  
+the 2-dim coordinates (x,y), neighborHood features, network assignment, unique Label, ROIID, and distance matrix.
+ These data are required for the constructure but can be edited later.
 ```{r}
-
+ library(imcExperiment)
+  #10 cells with 10 proteins
+  # 10 neighbors 
+ # and square distance matrix
+ # note that for SCE objects the columns are the cells, and rows are proteins
   x<-imcExperiment(cellIntensity=matrix(1,nrow=10,ncol=10),
-	spatial=matrix(1,nrow=10,ncol=2),
+	coordinates=matrix(1,nrow=10,ncol=2),
 	neighborHood=matrix(1,nrow=10,ncol=10),
 	network=matrix(1,nrow=10,ncol=10),
-	uniqueLabel=rep("A",10),
+	distance=matrix(1,nrow=10,ncol=10),
+	morphology=matrix(1,nrow=10,ncol=10),
+	uniqueLabel=paste0("A",seq(1,10)),
+	panel=letters[1:10],
 	ROIID=data.frame(ROIID=rep("A",10)))
+  
 
+ #7 cells with 10 proteins
+ # but the spatial information is 10 rows and this will fail to build.
  x<-imcExperiment(cellIntensity=matrix(1,nrow=7,ncol=10),
-	spatial=matrix(1,nrow=10,ncol=2),
-	neighborHood=matrix(1,nrow=10,ncol=10),
-	network=matrix(1,nrow=10,ncol=10),
+	coordinates=matrix(1,nrow=10,ncol=2),
+	neighborHood=matrix(1,nrow=10,ncol=20),
+	network=matrix(1,nrow=10,ncol=3),
+	distance=matrix(1,nrow=10,ncol=2),
 	uniqueLabel=rep("A",10),
 	ROIID=data.frame(ROIID=rep("A",10)))
 
 
- getSpatial(x)<-matrix(0,10,2)
- cellIntensity(x)
-
-  cellIntensity(x)<-asinh(cellIntensity(x))
-  cellIntensity(x)
-
+ 
 
 ``` 
+
+### Accessors, and setters
+ We need to be able to access, and set each slot.  We access the coordinates of your IMC experiment
+```{r access,eval=TRUE}
+
+  #get cellintensities
+  cellIntensity(x)
+  #set intensities
+  newIn<-matrix(rnorm(100,2,5),nrow=10,ncol=10)
+  rownames(newIn)<-rownames(x)
+  colnames(newIn)<-colnames(x)
+   cellIntensity(x)<-newIn
+  cellIntensity(x)==newIn
+
+ # if we want to store both the raw and normalized values in assays we can.
+  assays(x,withDimnames = FALSE)$raw<-matrix(1,nrow=10,ncol=10)
+  #store the normalized values.
+   cellIntensity(x)<-asinh(counts(x)/0.5)
+   all(cellIntensity(x)==asinh(assays(x)$counts/0.5))
+  x
+
+
+
+ ## access the coordinates
+  getCoordinates(x)
+  getCoordinates(x)<-matrix(rnorm(20,0,10),nrow=10,ncol=2)
+  getCoordinates(x)
+  
+ ## access the neighborhood profile.  Note each row must equal the number of cells, but the columns can be extended depending on the radius of interactions.
+  ## access the coordinates
+  getNeighborhood(x)
+  getNeighborhood(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=10)
+  getNeighborhood(x)
+
+ ## get the distance usually a square matrix, or can be just first nearest etc. 
+    getDistance(x)
+  getDistance(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=10)
+  getDistance(x)
+
+ # get morphological features
+  getMorphology(x)
+  getMorphology(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=60)
+  getMorphology(x)
+
+ ## for each cell we can obtain the ROI that it belongs to
+  rowData(x)
+ ## if we want to add patient features to each ROI we can
+  metas<-data.frame(ROIID=factor(rep("A",10)),treatment=factor(rep('none',10)))
+  colData(x)<-DataFrame(metas)
+
+ ##other slots for covariates
+   metadata(x)$experiment<-'test'
+   metadata(x)
+```
 
 ### From histoCAT to R
 
@@ -56,7 +116,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
   expr<-data[,3:36]
   normExp<-percentilenormalize(data=expr,percentile=0.99)
   normExp<-as.matrix(normExp)
-  boxplot(normExp)
+
 
   ##spatial component
   spatial<-(data[,c("X_position","Y_position")])
@@ -64,17 +124,129 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
  ##uniqueLabel
   uniqueLabel<-paste0(data[,"ImageId"],"_",data[,"CellId"])
 
- phenotypes<-matrix(data[,"Phenograph4732517031"])
+ phenotypes<-as.matrix(data[,grepl("Phenograph",colnames(data))])
+ morph<-as.matrix(data[,c("Area","Eccentricity",
+	"Solidity",
+	"Extent",
+	"Perimeter")])
 
-   x<-imcExperiment(cellIntensity=normExp,
-	spatial=spatial,
-	neighborHood=phenotypes,
+  x<-imcExperiment(cellIntensity=t(normExp),
+	coordinates=spatial,
+	neighborHood=as.matrix(data[,grepl("neighbour_",colnames(data))]),
 	network=phenotypes,
-	uniqueLabel=uniqueLabel)
-  ### create  phenotypes via Rphenograph
+	distance=matrix(1,nrow=nrow(data),ncol=10),
+	morphology=morph,
+	panel=colnames(normExp),
+	uniqueLabel=paste0(data$ImageId,"_",data$CellId),
+	ROIID=data.frame(ROIID=data$ImageId))
+
+ ## explore the container.
+  dim(assay(x))
+   colData(x)$treatment<-DataFrame(treatment=rep('none',1000))
+   head(colData(x))
+ head( colnames(x))
+  rownames(x)
+
+ ### inherited accessor.
+  pca_data <- prcomp(t(counts(x)), rank=50)
+  reducedDims(x) <- list(PCA=pca_data$x, TSNE=data.frame(tsne.x=data$tSNE4148542692_1,tsne.y=data$tSNE4148542692_2))
+   x
+     dim(reducedDims(x)$PCA)
+     dim(reducedDims(x)$TSNE)
+
+ imc<-x
+ x<-NULL
+```
+
+### flowSOM analysis from diffcyt
+```{r diffcyt}
+ library(CATALYST)
+data(sample_ff)
+data(sample_key)
+head(sample_key)
+ sce <- prepData(sample_ff)
+  plotScatter(sce,rownames(sce)[1:2])
+  ## the bar code ID events, 
+  # the rows are the bar code channels
+   (fs <- sce2fcs(sce, split_by = "sample_id"))
+
+ ## key notes for strucutre improvements.
+   #subsetting x SCE to y results in SCE
+   # y <- x[i, , drop = FALSE]
+    ## using 'assay' method, returns a matrix.
+#  y <- assay(y, 'counts')
+   ## and should be a class matrix,assay
+ #   y <- t(assay(x, 'counts'))
+
+ ## improving the IMC class structure.
+   ## the assay returns matrix class! required for CATALYST.
+  is(assay(imc,'counts'),'matrix')
+  
+    # for plot scatter to work need to set the rowData feature in a specific way.
+   channel<-sapply(strsplit(rownames(imc),"_"),function(x) x[3])
+   marker<-sapply(strsplit(rownames(imc),"_"),function(x) x[2])
+    rowData(imc)<-DataFrame(channel_name=channel,marker_name=marker)
+      rownames(imc)<-marker
+            plotScatter(imc,rownames(imc)[17:18],assay='counts')
+
+  # convert to flowSet
+      colData(imc)$ROIID[1:499]<-"A"
+      colData(imc)$ROIID[500:1000]<-"B"
+       (fsimc <- sce2fcs(imc, split_by = "ROIID"))
+```
+### Diffcyt package connection
+```{r diffcyt,eval=TRUE}
+ library(diffcyt)
+# Function to create random data (one sample)
+d_random <- function(n = 20000, mean = 0, sd = 1, ncol = 20, cofactor = 5) {
+  d <- sinh(matrix(rnorm(n, mean, sd), ncol = ncol)) * cofactor
+  colnames(d) <- paste0("marker", sprintf("%02d", 1:ncol))
+  d
+}
+
+# Create random data (without differential signal)
+set.seed(123)
+d_input <- list(
+  sample1 = d_random(), 
+  sample2 = d_random(), 
+  sample3 = d_random(), 
+  sample4 = d_random()
+)
+
+experiment_info <- data.frame(
+  sample_id = factor(paste0("sample", 1:4)), 
+  group_id = factor(c("group1", "group1", "group2", "group2")), 
+  stringsAsFactors = FALSE
+)
+
+marker_info <- data.frame(
+  channel_name = paste0("channel", sprintf("%03d", 1:20)), 
+  marker_name = paste0("marker", sprintf("%02d", 1:20)), 
+  marker_class = factor(c(rep("type", 10), rep("state", 10)), 
+                        levels = c("type", "state", "none")), 
+  stringsAsFactors = FALSE
+)
+
+# Prepare data
+d_se <- prepareData(d_input, experiment_info, marker_info)
+
+# Transform data
+d_se <- transformData(d_se)
+
+# Generate clusters
+d_se <- generateClusters(d_se)
+
+
+
+```
+
+### Phenograph cluster
+```{r pheno}
+
+ ### create  phenotypes via Rphenograph
   ##run phenograph
   require(Rphenograph)
-  phenos<-Rphenograph(cellIntensity(x),k=35)
+  phenos<-Rphenograph(t(cellIntensity(x)),k=35)
    pheno.labels<-as.numeric(membership(phenos[[2]]))
    getNetwork(x)<-matrix(pheno.labels)
     getNetwork(x)
@@ -145,6 +317,36 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
   sapply(eachNND,function(x) mean(x[,"dist"]))
 
 
+
+```
+
+
+### Changing class 
+
+```{r classChange}
+  library(CATALYST)
+library(cowplot)
+library(flowCore)
+library(ggplot2)
+library(SingleCellExperiment)
+
+ ## from IMCexperiment to SCE
+ sce<- SingleCellExperiment(x)
+ class(sce)
+
+ ## FIX ME: add the SOM algorithms for over-clustering and meta-clustering by using class inheritance. 
+
+ #### for the cytof, the columns are sample info and the rows are cells. it uses the SummarizedExperiment format.
+ se<- SummarizedExperiment(x)
+ class(se)
+  assays(se)$exprs<-assays(x)[[1]]
+ se<-transformData(se)
+
+ ## change into a flowFrame?
+
+ ## change into a daFrame (CATALYST)
+
+ ## 
 
 
 ```
