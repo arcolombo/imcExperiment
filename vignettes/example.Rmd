@@ -45,7 +45,8 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 ``` 
 
 ### From histoCAT to R
-
+* The IMC container contains cellIntensity, spatial coordinates, neighborhoods, networking assignments, unique cell labeling, and ROIID.
+* each slot has an accessor, and the ROIID is used to set the rowData of your object.
 ```{r}
   ### load the data from package.
   library(imcExperiment)
@@ -70,19 +71,50 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 	spatial=spatial,
 	neighborHood=phenotypes,
 	network=phenotypes,
-	uniqueLabel=uniqueLabel)
+	uniqueLabel=uniqueLabel,
+	ROIID=NULL)
   ### create  phenotypes via Rphenograph
   ##run phenograph
   require(Rphenograph)
   phenos<-Rphenograph(cellIntensity(x),k=35)
    pheno.labels<-as.numeric(membership(phenos[[2]]))
    getNetwork(x)<-matrix(pheno.labels)
-    getNetwork(x)
+  head(getNetwork(x))
   ##plot phenograph
   plot_clustering_heatmap_wrapper(myExperiment=x)
 
- ###
+ ###testing each accessor.
+  ## need to get each slot.
+  ##cell intensity
+   head(cellIntensity(x))
+   cellIntensity(x)<-cellIntensity(x)
+   all(cellIntensity(x)==normExp)
+    all(assays(x)$exprs==cellIntensity(x))
+   
+   ##spatial coordinates
+   head(getSpatial(x))
+    getSpatial(x)<-spatial
+     all(getSpatial(x)==spatial)
+   ##
+     
+     ##neighborhood cell assignments.
+      head(getNetwork(x))
+      all(getNetwork(x)==as.matrix(pheno.labels))
+      
+      ##uniqueLabels
+      head(getLabel(x))
+      all(getLabel(x)==uniqueLabel)
+      
+      
 
+      
+
+```  
+
+### Read in histoCat data into R
+* read in histoCat data for customized analysis.
+
+```{r}
 ### reading in a directory of histoCAT csv files.
 
  ##need to reconstruct the fold revised IMC data.
@@ -123,14 +155,14 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
   phenos<-Rphenograph(cellIntensity(x),k=35)
    pheno.labels<-as.numeric(membership(phenos[[2]]))
    getNetwork(x)<-matrix(pheno.labels)
-    getNetwork(x)
+   head( getNetwork(x))
   ##plot phenograph
   plot_clustering_heatmap_wrapper(myExperiment=x)
 
 
  ##store the ROIID in the metadata columns.
   ##access the unique cell labels.
-  getLabel(x)
+ head( getLabel(x))
   
   ##you can append more clinical features to the columns of the sampleDat data.frame.
   H<-imcExperimentToHyperFrame(imcExperiment=x)
