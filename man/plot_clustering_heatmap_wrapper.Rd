@@ -4,8 +4,11 @@
 \alias{plot_clustering_heatmap_wrapper}
 \title{plot the heatmap of phenotypes using imcExperiment container.}
 \usage{
-plot_clustering_heatmap_wrapper(myExperiment = NULL, useMedians = TRUE,
-  color_clusters = NULL)
+plot_clustering_heatmap_wrapper(
+  myExperiment = NULL,
+  useMedians = TRUE,
+  color_clusters = NULL
+)
 }
 \arguments{
 \item{myExperiment}{imcExperiment}

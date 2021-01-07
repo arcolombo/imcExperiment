@@ -49,12 +49,6 @@ subsetCase(object, value)
 }
 \arguments{
 \item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
 }
 \description{
 returns the expression of IMC data
