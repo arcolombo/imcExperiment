@@ -8,4 +8,5 @@
 #'   \item{neighborhood data}{the 10 neighborhors for each cell are computed, the number are the id of each neighbor}
 #'   \item{clustering and network}{phenograph cell assignments, and tSNE coordinates commonly computed in histoCAT}
 #'    }
-#'    @export
+#'    @source \url {www.usc.edu}
+"data"

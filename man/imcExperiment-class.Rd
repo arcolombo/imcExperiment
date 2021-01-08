@@ -12,8 +12,7 @@
 \alias{getCoordinates,imcExperiment-method}
 \alias{getCoordinates}
 \alias{getCoordinates<-,imcExperiment,matrix-method}
-\alias{getNeighborhood,imcExperiment-method}
-\alias{getSpatial}
+\alias{getNeighborhood}
 \alias{getNeighborhood<-,imcExperiment,matrix-method}
 \alias{spatial}
 \alias{getNetwork,imcExperiment-method}
@@ -27,8 +26,6 @@
 \alias{getMorphology<-,imcExperiment,matrix-method}
 \alias{getLabel,imcExperiment-method}
 \alias{getLabel}
-\alias{subsetCase,imcExperiment-method}
-\alias{selectCases,imcExperiment-method}
 \title{a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'}
 \usage{
 cellIntensity(object, ...)

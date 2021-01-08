@@ -75,9 +75,10 @@ setGeneric("getNeighborhood",
            function(object) standardGeneric("getNeighborhood"))
 
 #' a slot for the histoCAT neighborhood data (matrix) columns are the neighbors
+#' @name imcExperiment-class
 #' @rdname imcExperiment-class
 #' @param object imcExperiment container
-#' @aliases getSpatial imcExperiment-method
+#' @aliases getNeighborhood imcExperiment-method
 #' @export
 setMethod("getNeighborhood", "imcExperiment",
           function (object) return(object@neighborHood))
@@ -236,6 +237,7 @@ setGeneric("subsetCase",
            function(object,value) standardGeneric("subsetCase"))
 
 #' method to subset the slots, requires colData with column "ROIID"
+#' @name imcExperiment-class
 #' @rdname imcExperiment-class
 #' @param object IMC container
 #' @param value this is ROIID a single character ID
@@ -268,6 +270,7 @@ setGeneric("selectCases",
            function(object,value) standardGeneric("selectCases"))
 
 #' method to subset the slots, requires colData with column "ROIID"
+#' @name imcExperiment-class
 #' @rdname imcExperiment-class
 #' @param object IMC container
 #' @param value this is ROIID vector

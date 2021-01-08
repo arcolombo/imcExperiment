@@ -25,8 +25,7 @@ imcExperimentToHyperFrame<-function(imcExperiment=NULL){
 }##main
 
 #' map to point pattern from imcExperiment class.
-#' @importFrom spatstat ppp hyperframe unitname
-#'
+#' @importFrom spatstat ppp hyperframe unitname<-
 .imcExperimentToPPP<-function(caseExperiment=NULL){
  ### for an imcExperiment for 1 case, creates a point pattern.
   casePositions<-getCoordinates(caseExperiment)
