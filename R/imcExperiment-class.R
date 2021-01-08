@@ -1,5 +1,4 @@
-#' a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.
-#'
+#' a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'
 #' @slot coordinates   Spatial coordinate (rows are cells and columns are x,y coordinates.
 #' @slot cellIntensity a matrix of the intensity values rows are proteins and columns are cells (SCE format)
 #' @slot neighborHood  a matrix (rows are cells, columns are features) of neighborhood observations from neighborhood analysis

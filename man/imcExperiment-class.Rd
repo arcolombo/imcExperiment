@@ -20,14 +20,16 @@
 \alias{getNetwork}
 \alias{getNetwork<-,imcExperiment,matrix-method}
 \alias{getDistance,imcExperiment-method}
+\alias{getDistance}
 \alias{getDistance<-,imcExperiment,matrix-method}
 \alias{getMorphology,imcExperiment-method}
+\alias{getMorphology}
 \alias{getMorphology<-,imcExperiment,matrix-method}
 \alias{getLabel,imcExperiment-method}
 \alias{getLabel}
 \alias{subsetCase,imcExperiment-method}
 \alias{selectCases,imcExperiment-method}
-\title{a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.}
+\title{a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'}
 \usage{
 cellIntensity(object, ...)
 
@@ -80,10 +82,10 @@ selectCases(object, value)
 \arguments{
 \item{object}{IMC container}
 
-\item{value}{this is ROIID}
+\item{value}{this is ROIID vector}
 }
 \description{
-a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.
+a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'
 
 finds the intensities getter.
 
@@ -91,13 +93,23 @@ finds the spatial coords, getter.
 
 finds the neighborhood information.
 
+a slot for the histoCAT neighborhood data (matrix) columns are the neighbors
+
 finds the network information.
+
+assigns cell cluster assignment to the container. rows are cells and column is the cluster ID
 
 finds the distance information.
 
+distance matrix can be stored in the distance slot for pairwise distance
+
 finds the morphology information.
 
+morphological features can be stored (matrix) rows are cells and columns are Area, etc.
+
 finds the label information.
+
+unique cell labels can be assigned (vector)
 
 subsets the imcExperiment to a case along with all slots for a single ROI, using for distance analysis
 
