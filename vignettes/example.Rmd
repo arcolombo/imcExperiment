@@ -87,7 +87,98 @@ plot_clustering_heatmap_wrapper<-function(myExperiment=NULL,
     fontsize = 12, fontsize_number = 12,
     annotation_row = annotation_row, annotation_colors = annotation_colors,
     annotation_legend = annotation_legend)
+}
+
+
+
+
+plot_matrix_heatmap_wrapper<-function(expr=NULL, 
+  cell_clustering=NULL, cluster_merging = NULL,useMedians=TRUE,useQuantiles=FALSE,
+color_clusters=NULL){
+  ## cluster_merging should be character merging vector of 29 or so clusters. this is input from the ANNOTATION object.  not a matched object level.
+   expr<-as.matrix(expr)
+  if(useQuantiles==TRUE){
+  ##max min normalization
+  library(matrixStats)
+  rng <- colQuantiles(expr, probs = c(0.001, 0.999))
+  expr01 <- t((t(expr) - rng[, 1]) / (rng[, 2] - rng[, 1]))
+  expr01[expr01 < 0] <- 0
+  expr01[expr01 > 1] <- 1
+  }else{
+   expr01<-expr 
+
   }
+
+ if(is.null(color_clusters)==TRUE){
+  color_clusters <- c("#DC050C", "#FB8072", "#1965B0", "#7BAFDE", "#882E72", 
+  "#B17BA6", "#FF7F00", "#FDB462", "#E7298A", "#E78AC3", 
+  "#33A02C", "#B2DF8A", "#55A1B1", "#8DD3C7", "#A6761D", 
+  "#E6AB02", "#7570B3", "#BEAED4", "#666666", "#999999", 
+  "#aa8282", "#d4b7b7", "#8600bf", "#ba5ce3", "#808000", 
+  "#aeae5c", "#1e90ff", "#00bfff", "#56ff0d", "#ffff00")
+ }
+
+  # Calculate the median expression 
+  library(dplyr)
+  expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
+   dplyr::group_by(cell_clustering) %>% 
+    dplyr::summarize_all(funs(median))
+ if(useMedians==TRUE){
+  expr01_median <- data.frame(expr01, cell_clustering = cell_clustering) %>%
+    group_by(cell_clustering) %>% 
+    dplyr::summarize_all(funs(median))
+   }else{
+   expr01_median <- data.frame(expr01, cell_clustering = cell_clustering) %>%
+    dplyr::group_by(cell_clustering) %>% 
+   dplyr::summarize_all(funs(mean))
+ }
+  # Calculate cluster frequencies
+  clustering_table <- as.numeric(table(cell_clustering))
+   print(dim(expr_median))
+  # This clustering is based on the markers that were used for the main clustering
+  d <- dist(expr_median[, colnames(expr)], method = "euclidean")
+  cluster_rows <- hclust(d, method = "average")
+   expr_heat <- as.matrix(expr01_median[, colnames(expr01)])
+  rownames(expr_heat) <- expr01_median$cell_clustering
+ 
+  labels_row <- paste0(rownames(expr_heat), " (", 
+    round(clustering_table / sum(clustering_table) * 100, 2), "%)")
+  labels_col <- colnames(expr_heat)
+  
+  # Row annotation for the heatmap
+  annotation_row <- data.frame(cluster = factor(expr01_median$cell_clustering))
+  rownames(annotation_row) <- rownames(expr_heat)
+  
+  color_clusters <- color_clusters[1:nlevels(annotation_row$cluster)]
+  names(color_clusters) <- levels(annotation_row$cluster)
+  annotation_colors <- list(cluster = color_clusters)
+  annotation_legend <- FALSE
+  
+  if(!is.null(cluster_merging)){
+    
+    annotation_row$cluster_merging <- factor(cluster_merging)
+    color_clusters <- color_clusters[1:nlevels(factor(cluster_merging))]
+    names(color_clusters) <- levels(factor(cluster_merging))
+    annotation_colors$cluster_merging <- color_clusters
+    annotation_legend <- TRUE
+  }
+  
+  # Colors for the heatmap
+  library(RColorBrewer);library(pheatmap)
+  color <- colorRampPalette(rev(brewer.pal(n = 9, name = "RdYlBu")))(100)
+  
+  pheatmap::pheatmap(expr_heat, color = color, 
+    cluster_cols = FALSE, cluster_rows = cluster_rows, 
+    labels_col = labels_col, labels_row = labels_row, 
+    display_numbers = TRUE, number_color = "black", 
+    fontsize = 10, fontsize_number = 7,
+    annotation_row = annotation_row, annotation_colors = annotation_colors,
+    annotation_legend = annotation_legend)
+  
+}
+
+
+
 
 
 ```
@@ -265,93 +356,8 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
  x<-NULL
 ```
 
-### flowSOM analysis from diffcyt
-* utilize CATALYST package for IMC we can see scatter plots.
-* the rownames for IMC are set to the panel names, and we can split these to create the marker and metal.
-* The ROIID is useful for quickly creating a FlowSet object as a class inheritance method.  
-```{r diffcyt}
- library(CATALYST)
-data(sample_ff)
-data(sample_key)
-head(sample_key)
- sce <- prepData(sample_ff)
-  plotScatter(sce,rownames(sce)[1:2])
-  ## the bar code ID events, 
-  # the rows are the bar code channels
-   (fs <- sce2fcs(sce, split_by = "sample_id"))
-
- ## key notes for strucutre improvements.
-   #subsetting x SCE to y results in SCE
-   # y <- x[i, , drop = FALSE]
-    ## using 'assay' method, returns a matrix.
-#  y <- assay(y, 'counts')
-   ## and should be a class matrix,assay
- #   y <- t(assay(x, 'counts'))
-
- ## improving the IMC class structure.
-   ## the assay returns matrix class! required for CATALYST.
-  is(assay(imc,'counts'),'matrix')
-  
-    # for plot scatter to work need to set the rowData feature in a specific way.
-   channel<-sapply(strsplit(rownames(imc),"_"),function(x) x[3])
-   marker<-sapply(strsplit(rownames(imc),"_"),function(x) x[2])
-    rowData(imc)<-DataFrame(channel_name=channel,marker_name=marker)
-      rownames(imc)<-marker
-            plotScatter(imc,rownames(imc)[17:18],assay='counts')
-
-  # convert to flowSet
-      colData(imc)$ROIID[1:499]<-"A"
-      colData(imc)$ROIID[500:1000]<-"B"
-       (fsimc <- sce2fcs(imc, split_by = "ROIID"))
-```
-### Diffcyt package connection
-* Given a flowSet object we can utilize the diffCyt package for measuring phenotype differences.
-* This code section is an example of diffcyt from their manual.
-* Creates a random summarized experiment.
-```{r diffcyt,eval=TRUE}
- library(diffcyt)
-# Function to create random data (one sample)
-d_random <- function(n = 20000, mean = 0, sd = 1, ncol = 20, cofactor = 5) {
-  d <- sinh(matrix(rnorm(n, mean, sd), ncol = ncol)) * cofactor
-  colnames(d) <- paste0("marker", sprintf("%02d", 1:ncol))
-  d
-}
-
-# Create random data (without differential signal)
-set.seed(123)
-d_input <- list(
-  sample1 = d_random(), 
-  sample2 = d_random(), 
-  sample3 = d_random(), 
-  sample4 = d_random()
-)
-
-experiment_info <- data.frame(
-  sample_id = factor(paste0("sample", 1:4)), 
-  group_id = factor(c("group1", "group1", "group2", "group2")), 
-  stringsAsFactors = FALSE
-)
-
-marker_info <- data.frame(
-  channel_name = paste0("channel", sprintf("%03d", 1:20)), 
-  marker_name = paste0("marker", sprintf("%02d", 1:20)), 
-  marker_class = factor(c(rep("type", 10), rep("state", 10)), 
-                        levels = c("type", "state", "none")), 
-  stringsAsFactors = FALSE
-)
-
-# Prepare data
-d_se <- prepareData(d_input, experiment_info, marker_info)
-
-# Transform data
-d_se <- transformData(d_se)
-
-# Generate clusters
-d_se <- generateClusters(d_se)
 
 
-
-```
 
 ### IMC container and Phenograph cluster neighborhood 
 * Phenograph an IMC contrainer and heatmap result.
@@ -464,14 +470,15 @@ d_se <- generateClusters(d_se)
 ```
 
 
-### Changing class 
-
+### Changing class from IMC to SummarizedExperiment
+* IMC container can change to SummarizedExperiment and the FlowSOM algorithm can be used.
 ```{r classChange}
   library(CATALYST)
 library(cowplot)
 library(flowCore)
 library(ggplot2)
 library(SingleCellExperiment)
+library(diffcyt)
 
  ## from IMCexperiment to SCE
  sce<- SingleCellExperiment(x)
@@ -487,31 +494,26 @@ library(SingleCellExperiment)
 
  ## change into a daFrame (CATALYST)
 
- ## 
+ data("imcData")
+
  
- rd<-DataFrame(sample_id=colData(imc))
- rd$group_id<-key[match(rd$sample_id.ROIID,key$Name),'Treatment']
- 
- exper_info<-key[,c("Name","Treatment")]
-  colnames(exper_info)<-c("sample_id","group_id")
- 
-  marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imc),"_"),function(x) x[3]),
-              marker_name=rownames(imc),
+ rd<-DataFrame(colData(imcData))
+
+  marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imcData),"_"),function(x) x[3]),
+              marker_name=rownames(imcData),
               marker_class=c(rep("type",13),
                              rep("state",18),
                              rep("none",13)))
 
- pn<-percentilenormalize(data=t(assays(imc)$loglim),percentile=0.99 )
-
   ## Switching into Summarized Experiment class.
-    dse<-SummarizedExperiment(assays=SimpleList(exprs=pn),
-                           metadata=list(experiment_info=exper_info),
+    dse<-SummarizedExperiment(assays=SimpleList(exprs=t(cellIntensity(imcData))),
                            rowData=rd,
                            colData=DataFrame(marker_info)
                            )
    stopifnot(all(colnames(dse)==marker_info$marker_name))
+   dse
 
- # Transform data?
+ # Transform data recommended
  dse <- transformData(dse)
 ## maybe look a the normalization.
 # Generate clusters
@@ -519,16 +521,154 @@ dse <- (generateClusters(dse,meta_clustering=TRUE,meta_k=30,seed_clustering=828)
 
  ## examine each cluster.
 cluster<-rowData(dse)
- data<-data.frame(t(logcounts(imc)),cluster)
- plot_clustering_heatmap_wrapper(expr=data[,rownames(imc)],
+ data<-data.frame(t(logcounts(imcData)),cluster)
+ plot_matrix_heatmap_wrapper(expr=data[,rownames(imcData)],
                                  cell_clustering=data$cluster_id)
  
- ### sub-clustering 1 cluster.
- #dse_1<-dse[which(rowData(dse)$cluster_id==1),]
-#  dse_1<-(generateClusters(dse_1,meta_clustering=TRUE,meta_k=30,seed_clustering=828))
-#plot_clustering_heatmap_wrapper(expr=assays(dse_1)$exprs,
- #                                cell_clustering=rowData(dse_1)$cluster_id)
  
+
+```
+### IMC and flowSet conversions
+* utilize CATALYST package for IMC we can see scatter plots.
+* the rownames for IMC are set to the panel names, and we can split these to create the marker and metal.
+* The ROIID is useful for quickly creating a FlowSet object as a class inheritance method.
+* The rownames of IMC container are usually in "Cell_Marker_ChannelMetal"
+```{r}
+
+# library(CATALYST)
+#data(sample_ff)
+#data(sample_key)
+#head(sample_key)
+ #sce <- prepData(sample_ff)
+  #plotScatter(sce,rownames(sce)[1:2])
+  ## the bar code ID events, 
+  # the rows are the bar code channels
+   #(fs <- sce2fcs(sce, split_by = "sample_id"))
+
+ ## key notes for strucutre improvements.
+   #subsetting x SCE to y results in SCE
+   # y <- x[i, , drop = FALSE]
+    ## using 'assay' method, returns a matrix.
+#  y <- assay(y, 'counts')
+   ## and should be a class matrix,assay
+ #   y <- t(assay(x, 'counts'))
+
+ ## improving the IMC class structure.
+   ## the assay returns matrix class! required for CATALYST.
+  is(assay(imcData,'counts'),'matrix')
+  rownames(imcData)
+    # for plot scatter to work need to set the rowData feature in a specific way.
+   channel<-sapply(strsplit(rownames(imcData),"_"),function(x) x[3])
+   marker<-sapply(strsplit(rownames(imcData),"_"),function(x) x[2])
+    rowData(imcData)<-DataFrame(channel_name=channel,marker_name=marker)
+      rownames(imcData)<-marker
+            plotScatter(imcData,rownames(imcData)[17:18],assay='counts')
+
+  # convert to flowSet
+             ## the warning has to do with duplicated Iridium channels.
+   table(colData(imcData)$ROIID)
+       (fsimc <- sce2fcs(imcData, split_by = "ROIID"))
+    ## now we have a flowSet.
+   pData(fsimc)
+   fsApply(fsimc,nrow)
+   dim(exprs(fsimc[[1]]))
+   exprs(fsimc[[1]])[1:5,1:5]
+    ## set up the metadata files.
+   head(marker_info)
+   
+    exper_info<-data.frame(group_id=colData(imcData)$Treatment[match(pData(fsimc)$name,colData(imcData)$ROIID)],
+                           patient_id=colData(imcData)$Patient.Number[match(pData(fsimc)$name,colData(imcData)$ROIID)],
+                           sample_id=pData(fsimc)$name)
+   
+   ## create design
+   design<-createDesignMatrix(
+     exper_info,cols_design=c("group_id","patient_id"))
+   
+   ##set up contrast 
+   contrast<-createContrast(c(0,1,0))
+   nrow(contrast)==ncol(design)
+   data.frame(parameters=colnames(design),contrast)
+   
+    ## flowSet to DiffCyt
+    out_DA<-diffcyt(
+      d_input=fsimc,
+      experiment_info=exper_info,
+      marker_info=marker_info,
+      design=design,
+      contrast=contrast,
+      analysis_type = "DA",
+      seed_clustering = 123
+    )
+   topTable(out_DA,format_vals = TRUE)
+   
+   out_DS<-diffcyt(
+     d_input=fsimc,
+     experiment_info=exper_info,
+     marker_info=marker_info,
+     design=design,
+     contrast=contrast,
+     analysis_type='DS',
+     seed_clustering = 123,
+     plot=FALSE)
+   
+      topTable(out_DS,format_vals = TRUE)
+      
+       ### from flowSet to SE.
+ d_se<-prepareData(fsimc,exper_info,marker_info)
+
 
 
 ```
+
+
+### Diffcyt package tutorial
+* Given a flowSet object we can utilize the diffCyt package for measuring phenotype differences.
+* This code section is an example of diffcyt from their manual.
+* Creates a random summarized experiment.
+```{r diffcyt,eval=TRUE}
+ library(diffcyt)
+# Function to create random data (one sample)
+d_random <- function(n = 20000, mean = 0, sd = 1, ncol = 20, cofactor = 5) {
+  d <- sinh(matrix(rnorm(n, mean, sd), ncol = ncol)) * cofactor
+  colnames(d) <- paste0("marker", sprintf("%02d", 1:ncol))
+  d
+}
+
+# Create random data (without differential signal)
+set.seed(123)
+d_input <- list(
+  sample1 = d_random(), 
+  sample2 = d_random(), 
+  sample3 = d_random(), 
+  sample4 = d_random()
+)
+
+experiment_info <- data.frame(
+  sample_id = factor(paste0("sample", 1:4)), 
+  group_id = factor(c("group1", "group1", "group2", "group2")), 
+  stringsAsFactors = FALSE
+)
+
+marker_info <- data.frame(
+  channel_name = paste0("channel", sprintf("%03d", 1:20)), 
+  marker_name = paste0("marker", sprintf("%02d", 1:20)), 
+  marker_class = factor(c(rep("type", 10), rep("state", 10)), 
+                        levels = c("type", "state", "none")), 
+  stringsAsFactors = FALSE
+)
+
+# Prepare data
+d_se <- prepareData(d_input, experiment_info, marker_info)
+
+# Transform data
+d_se <- transformData(d_se)
+
+# Generate clusters
+d_se <- generateClusters(d_se)
+
+
+
+```
+
+
+

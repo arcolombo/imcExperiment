@@ -26,6 +26,7 @@
 \alias{getLabel,imcExperiment-method}
 \alias{getLabel}
 \alias{subsetCase,imcExperiment-method}
+\alias{selectCases,imcExperiment-method}
 \title{a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.}
 \usage{
 cellIntensity(object, ...)
@@ -71,9 +72,15 @@ getLabel(object)
 subsetCase(object, value)
 
 \S4method{subsetCase}{imcExperiment}(object, value)
+
+selectCases(object, value)
+
+\S4method{selectCases}{imcExperiment}(object, value)
 }
 \arguments{
-\item{object}{imcExperiment}
+\item{object}{IMC container}
+
+\item{value}{this is ROIID}
 }
 \description{
 a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.
@@ -92,7 +99,11 @@ finds the morphology information.
 
 finds the label information.
 
-subsets the imcExperiment to a case along with all slots.
+subsets the imcExperiment to a case along with all slots for a single ROI, using for distance analysis
+
+method to subset the slots, requires colData with column "ROIID"
+
+subsets the imcExperiment to a case along with all slots for a selected multiple ROIs.
 
 method to subset the slots, requires colData with column "ROIID"
 }
