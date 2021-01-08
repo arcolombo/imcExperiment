@@ -1,9 +1,9 @@
 #' Initializes a imcExperiment and performs some rudimentary checks.
-#' Many of the arguments CAN be NULL; determination of which is required 
-#' is done at run-time.  A imcExperiment must contain at least the 
-#' expressions and spatial/coordinate assays.  
+#' Many of the arguments CAN be NULL; determination of which is required
+#' is done at run-time.  A imcExperiment must contain at least the
+#' expressions and spatial/coordinate assays.
 #'
-#' 
+#'
 #' @param coordinates            matrix of spatial coordinates (x,y)
 #' @param cellIntensity            matrix of counts
 #' @param neighborHood               neighborhood results
@@ -11,8 +11,9 @@
 #' @param distance            distances for each cell, can be square
 #' @param morphology            morphology features for each cell, can be square
 #' @param uniqueLabel	character class each cell is assigned a uniqueLabel
+#' @param panel antibody panel rownames set to rowData
 #' @param ROIID	character for ROI
-#' @export 
+#' @export
 imcExperiment<-function(
         coordinates=matrix(1,3,3),
 	cellIntensity=matrix(1,3,3),
@@ -62,8 +63,8 @@ imcExperiment<-function(
 	distance=distance,
 	morphology=morphology,
 	uniqueLabel=uniqueLabel)
- 
 
-  
+
+
 }
 

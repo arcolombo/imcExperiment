@@ -3,15 +3,22 @@
 \name{imcExperiment}
 \alias{imcExperiment}
 \title{Initializes a imcExperiment and performs some rudimentary checks.
-Many of the arguments CAN be NULL; determination of which is required 
-is done at run-time.  A imcExperiment must contain at least the 
+Many of the arguments CAN be NULL; determination of which is required
+is done at run-time.  A imcExperiment must contain at least the
 expressions and spatial/coordinate assays.}
 \usage{
-imcExperiment(coordinates = matrix(1, 3, 3), cellIntensity = matrix(1,
-  3, 3), neighborHood = matrix(1, 3, 3), network = matrix(1, 3, 3),
-  distance = matrix(1, 3, 3), morphology = matrix(1, 3, 3),
-  uniqueLabel = rep("A", 3), panel = as.character(seq(1, 3)),
-  ROIID = data.frame(ROIID = rep("A", 3)), ...)
+imcExperiment(
+  coordinates = matrix(1, 3, 3),
+  cellIntensity = matrix(1, 3, 3),
+  neighborHood = matrix(1, 3, 3),
+  network = matrix(1, 3, 3),
+  distance = matrix(1, 3, 3),
+  morphology = matrix(1, 3, 3),
+  uniqueLabel = rep("A", 3),
+  panel = as.character(seq(1, 3)),
+  ROIID = data.frame(ROIID = rep("A", 3)),
+  ...
+)
 }
 \arguments{
 \item{coordinates}{matrix of spatial coordinates (x,y)}
@@ -28,11 +35,13 @@ imcExperiment(coordinates = matrix(1, 3, 3), cellIntensity = matrix(1,
 
 \item{uniqueLabel}{character class each cell is assigned a uniqueLabel}
 
+\item{panel}{antibody panel rownames set to rowData}
+
 \item{ROIID}{character for ROI}
 }
 \description{
 Initializes a imcExperiment and performs some rudimentary checks.
-Many of the arguments CAN be NULL; determination of which is required 
-is done at run-time.  A imcExperiment must contain at least the 
+Many of the arguments CAN be NULL; determination of which is required
+is done at run-time.  A imcExperiment must contain at least the
 expressions and spatial/coordinate assays.
 }

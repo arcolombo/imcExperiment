@@ -13,6 +13,85 @@ vignette: >
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
+# Heatmap plotting script (helper)
+* The heatmap function we do not want to include with this package, but here is the helper function.
+```{r}
+library(dplyr)
+library(RColorBrewer)
+library(pheatmap)
+library(magrittr)
+
+ ##the rows of the IMC container input are the protein antibody panel, the columns are the cells. (need to transpose for matrix computatoins)
+plot_clustering_heatmap_wrapper<-function(myExperiment=NULL, 
+  useMedians=TRUE,
+ color_clusters=NULL){
+  
+  expr<-(cellIntensity(myExperiment))
+  cell_clustering<-(getNetwork(myExperiment))
+
+   expr<-t(as.matrix(expr))
+   
+ if(is.null(color_clusters)==TRUE){
+  color_clusters <- c("#DC050C", "#FB8072", "#1965B0", "#7BAFDE", "#882E72", 
+  "#B17BA6", "#FF7F00", "#FDB462", "#E7298A", "#E78AC3", 
+  "#33A02C", "#B2DF8A", "#55A1B1", "#8DD3C7", "#A6761D", 
+  "#E6AB02", "#7570B3", "#BEAED4", "#666666", "#999999", 
+  "#aa8282", "#d4b7b7", "#8600bf", "#ba5ce3", "#808000", 
+  "#aeae5c", "#1e90ff", "#00bfff", "#56ff0d", "#ffff00")
+ }
+
+  # Calculate the median expression 
+  expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
+    group_by(cell_clustering) %>% 
+    summarize_all(funs(median))
+ 
+  if(useMedians==TRUE){
+  expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
+    group_by(cell_clustering) %>% 
+    summarize_all(funs(median))
+   }else{
+   expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
+    group_by(cell_clustering) %>% 
+    summarize_all(funs(mean))
+ }
+  # Calculate cluster frequencies
+  clustering_table <- as.numeric(table(cell_clustering))
+  
+  # This clustering is based on the markers that were used for the main clustering
+  d <- dist(expr_median[, colnames(expr)], method = "euclidean")
+  cluster_rows <- hclust(d, method = "average")
+   expr_heat <- as.matrix(expr_median[, colnames(expr)])
+  rownames(expr_heat) <- expr_median$cell_clustering
+ 
+  labels_row <- paste0(rownames(expr_heat), " (", 
+    round(clustering_table / sum(clustering_table) * 100, 2), "%)")
+  labels_col <- colnames(expr_heat)
+  
+  # Row annotation for the heatmap
+  annotation_row <- data.frame(cluster = factor(expr_median$cell_clustering))
+  rownames(annotation_row) <- rownames(expr_heat)
+  
+  color_clusters <- color_clusters[1:nlevels(annotation_row$cluster)]
+  names(color_clusters) <- levels(annotation_row$cluster)
+  annotation_colors <- list(cluster = color_clusters)
+  annotation_legend <- FALSE
+  
+  # Colors for the heatmap
+  #library(RColorBrewer);
+  color <- colorRampPalette(rev(brewer.pal(n = 9, name = "RdYlBu")))(100)
+  
+  pheatmap(expr_heat, color = color, 
+    cluster_cols = FALSE, cluster_rows = cluster_rows, 
+    labels_col = labels_col, labels_row = labels_row, 
+    display_numbers = TRUE, number_color = "black", 
+    fontsize = 12, fontsize_number = 12,
+    annotation_row = annotation_row, annotation_colors = annotation_colors,
+    annotation_legend = annotation_legend)
+  }
+
+
+```
+
 # example
  This shows how to construct and IMCexperiment object.
  The input to the imcExperiment object has the cells (columns) and rows are the proteins.  For spatial features, the rows are the cells, and columns are the spatial features.  
@@ -86,7 +165,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
  ## get the distance usually a square matrix, or can be just first nearest etc. 
     getDistance(x)
   getDistance(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=10)
-  getDistance(x)
+  head(getDistance(x))
 
  # get morphological features
   getMorphology(x)
@@ -105,7 +184,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 ```
 
 ### From histoCAT to R
-
+* We use the raw histoCAT output and containerize the data.
 ```{r}
   ### load the data from package.
   library(imcExperiment)
@@ -146,6 +225,34 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
    head(colData(x))
  head( colnames(x))
   rownames(x)
+  
+  ## Intensity
+  all(t(cellIntensity(x))==normExp)
+  head(t(cellIntensity(x)))
+  ##coordinate
+  all(getCoordinates(x)==spatial)
+  head(getCoordinates(x))
+  #neighbor attraction data form histoCAT
+ all(getNeighborhood(x)==as.matrix(data[,grepl("neighbour_",colnames(data))]))
+ head(getNeighborhood((x)))
+ ##phenotype cluster ID
+  head(getNetwork(x))
+ all(getNetwork(x)==phenotypes)
+ ###distance calculations
+  head(getDistance(x))
+  ##morphology
+   all(getMorphology(x)==morph)
+  head(getMorphology(x))
+  ##uniqueLabel
+   head(getLabel(x))
+   all(getLabel(x)==paste0(data$ImageId,"_",data$CellId) )
+```
+
+
+### PCA demo analysis
+* PCA data and tSNE coordinates can be added to the container.
+```{r}
+ 
 
  ### inherited accessor.
   pca_data <- prcomp(t(counts(x)), rank=50)
@@ -159,6 +266,9 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 ```
 
 ### flowSOM analysis from diffcyt
+* utilize CATALYST package for IMC we can see scatter plots.
+* the rownames for IMC are set to the panel names, and we can split these to create the marker and metal.
+* The ROIID is useful for quickly creating a FlowSet object as a class inheritance method.  
 ```{r diffcyt}
  library(CATALYST)
 data(sample_ff)
@@ -195,6 +305,9 @@ head(sample_key)
        (fsimc <- sce2fcs(imc, split_by = "ROIID"))
 ```
 ### Diffcyt package connection
+* Given a flowSet object we can utilize the diffCyt package for measuring phenotype differences.
+* This code section is an example of diffcyt from their manual.
+* Creates a random summarized experiment.
 ```{r diffcyt,eval=TRUE}
  library(diffcyt)
 # Function to create random data (one sample)
@@ -241,31 +354,46 @@ d_se <- generateClusters(d_se)
 ```
 
 ### Phenograph cluster
+* Phenograph an IMC contrainer and heatmap result.
 ```{r pheno}
 
  ### create  phenotypes via Rphenograph
   ##run phenograph
   require(Rphenograph)
-  phenos<-Rphenograph(t(cellIntensity(x)),k=35)
+  phenos<-Rphenograph(t(cellIntensity(imc)),k=35)
    pheno.labels<-as.numeric(membership(phenos[[2]]))
-   getNetwork(x)<-matrix(pheno.labels)
-    getNetwork(x)
+   getNetwork(imc)<-matrix(pheno.labels)
+   head( getNetwork(imc))
   ##plot phenograph
-  plot_clustering_heatmap_wrapper(myExperiment=x)
+  plot_clustering_heatmap_wrapper(myExperiment=imc)
+```
 
+### histoCAT analysis
+* raw input from histoCAT and creating an IMC container.
+* containerizes the intensities, neighborhood results, morphology, and computes nearest distances and stores it.
+* Can use a hyperframe to identify distances quickly.
+```{r}
  ###
 
 ### reading in a directory of histoCAT csv files.
 
  ##need to reconstruct the fold revised IMC data.
   ##merges a folder full of histoCAT csv files.
+ # use morphology and the 1-10 neighbors.
   dataSet<-NULL
  for(i in c("case8.csv","case5.csv")){
   message(i)
     fpath <- system.file("extdata", i, package="imcExperiment")
     case1<-read.csv(fpath)
    proteins<-colnames(case1)[grepl("Cell_",colnames(case1))]
-    case1<-case1[,c("ImageId","CellId","X_position","Y_position",proteins)]
+   neig<-colnames(case1)[grepl("neighbour_",colnames(case1))][1:10]
+    case1<-case1[,c("ImageId","CellId","X_position","Y_position",proteins,
+                    "Area",
+                    "Eccentricity",
+	"Solidity",
+	"Extent",
+	"Perimeter",
+	 neig)]
     dataSet<-rbind(dataSet,case1)
   }
  
@@ -283,26 +411,41 @@ d_se <- generateClusters(d_se)
   ##not yet assigned
   phenotypes<-matrix(0,nrow(dataSet),1)
   ROIID=data.frame(ROIID=dataSet[,"ImageId"])
-   x<-imcExperiment(cellIntensity=normExp,
-        spatial=spatial,
-        neighborHood=phenotypes,
-        network=phenotypes,
-        uniqueLabel=uniqueLabel,
+  morph<-dataSet[,c("Area",
+                    "Eccentricity",
+	"Solidity",
+	"Extent",
+	"Perimeter")]
+  
+  x<-imcExperiment(cellIntensity=t(normExp),
+	coordinates=spatial,
+	neighborHood=as.matrix(dataSet[,grepl("neighbour_",colnames(dataSet))]),
+	network=phenotypes,
+	distance=matrix(1,nrow=nrow(dataSet),ncol=10),
+	morphology=morph,
+	panel=colnames(normExp),
+	uniqueLabel=uniqueLabel,
 	ROIID=ROIID)
+   x
+   
+   
   ##phenotype
   ##run phenograph
   require(Rphenograph)
-  phenos<-Rphenograph(cellIntensity(x),k=35)
+  phenos<-Rphenograph(t(cellIntensity(x)),k=35)
    pheno.labels<-as.numeric(membership(phenos[[2]]))
    getNetwork(x)<-matrix(pheno.labels)
-    getNetwork(x)
+    head(getNetwork(x))
   ##plot phenograph
   plot_clustering_heatmap_wrapper(myExperiment=x)
 
 
  ##store the ROIID in the metadata columns.
   ##access the unique cell labels.
-  getLabel(x)
+  head(getLabel(x))
+  
+     roi<-subsetCase(x,372149 )
+
   
   ##you can append more clinical features to the columns of the sampleDat data.frame.
   H<-imcExperimentToHyperFrame(imcExperiment=x)
@@ -337,10 +480,8 @@ library(SingleCellExperiment)
  ## FIX ME: add the SOM algorithms for over-clustering and meta-clustering by using class inheritance. 
 
  #### for the cytof, the columns are sample info and the rows are cells. it uses the SummarizedExperiment format.
- se<- SummarizedExperiment(x)
- class(se)
-  assays(se)$exprs<-assays(x)[[1]]
- se<-transformData(se)
+ 
+ 
 
  ## change into a flowFrame?
 

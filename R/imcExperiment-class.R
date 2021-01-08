@@ -1,4 +1,4 @@
-#' a summarized experiment of IMC runs
+#' a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.
 #'
 #' @slot coordinates   Spatial coordinate (rows are cells and columns are x,y coordinates.
 #' @slot cellIntensity a matrix of the intensity values rows are proteins and columns are cells (SCE format)
@@ -33,7 +33,7 @@
 
 #' @export
 #' @importFrom SingleCellExperiment SingleCellExperiment
-   
+
  # the rows are the panel names
  # the columns are the single cells
  # the column are the single cells to match the SCE designs (scRNA)
@@ -57,6 +57,6 @@
 setValidity("imcExperiment",function(object){
     msg<-.checkSpatialDimension(object)
      if(is.null(msg)){
-      TRUE 
+      TRUE
      }else msg
- })   
+ })

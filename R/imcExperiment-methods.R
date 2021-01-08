@@ -5,7 +5,7 @@
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
-setGeneric("cellIntensity", 
+setGeneric("cellIntensity",
            function(object,...) standardGeneric("cellIntensity"))
 
 #' @rdname imcExperiment-class
@@ -35,7 +35,7 @@ setMethod("cellIntensity<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
-setGeneric("getCoordinates", 
+setGeneric("getCoordinates",
            function(object) standardGeneric("getCoordinates"))
 
 #' @rdname imcExperiment-class
@@ -64,7 +64,7 @@ setMethod("getCoordinates<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
-setGeneric("getNeighborhood", 
+setGeneric("getNeighborhood",
            function(object) standardGeneric("getNeighborhood"))
 #' @rdname imcExperiment-class
 #' @aliases getSpatial imcExperiment-method
@@ -93,7 +93,7 @@ setMethod("getNeighborhood<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
-setGeneric("getNetwork", 
+setGeneric("getNetwork",
            function(object) standardGeneric("getNetwork"))
 #' @rdname imcExperiment-class
 #' @aliases getNetwork imcExperiment-method
@@ -123,7 +123,7 @@ setMethod("getNetwork<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
-setGeneric("getDistance", 
+setGeneric("getDistance",
            function(object) standardGeneric("getDistance"))
 #' @rdname imcExperiment-class
 #' @aliases getSpatial imcExperiment-method
@@ -152,7 +152,7 @@ setMethod("getDistance<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
-setGeneric("getMorphology", 
+setGeneric("getMorphology",
            function(object) standardGeneric("getMorphology"))
 #' @rdname imcExperiment-class
 #' @aliases getSpatial imcExperiment-method
@@ -210,7 +210,7 @@ setMethod("subsetCase", "imcExperiment",
              id<-which(colData(object)[,"ROIID"]==value)
              roi<-object[,id]
              roi@coordinates<-object@coordinates[id,]
-             roi@cellIntensity<-object@cellIntensity[id,]
+             roi@cellIntensity<-object@cellIntensity[,id]
              roi@neighborHood<-as.matrix(object@neighborHood[id,])
              roi@network<-as.matrix(object@network[id,])
              roi@distance<-as.matrix(object@distance[id,])

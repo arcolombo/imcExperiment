@@ -6,14 +6,16 @@
 \alias{imcExperiment-class}
 \alias{.imcExperiment}
 \alias{cellIntensity,imcExperiment-method}
+\alias{cellIntensity}
+\alias{imcExperiment-method}
 \alias{cellIntensity<-,imcExperiment,matrix-method}
 \alias{getCoordinates,imcExperiment-method}
-\alias{getSpatial}
-\alias{imcExperiment-method}
+\alias{getCoordinates}
 \alias{getCoordinates<-,imcExperiment,matrix-method}
-\alias{spatial}
 \alias{getNeighborhood,imcExperiment-method}
+\alias{getSpatial}
 \alias{getNeighborhood<-,imcExperiment,matrix-method}
+\alias{spatial}
 \alias{getNetwork,imcExperiment-method}
 \alias{getNetwork}
 \alias{getNetwork<-,imcExperiment,matrix-method}
@@ -24,8 +26,10 @@
 \alias{getLabel,imcExperiment-method}
 \alias{getLabel}
 \alias{subsetCase,imcExperiment-method}
-\title{a summarized experiment of IMC runs}
+\title{a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.}
 \usage{
+cellIntensity(object, ...)
+
 \S4method{cellIntensity}{imcExperiment}(object)
 
 \S4method{cellIntensity}{imcExperiment,matrix}(object) <- value
@@ -70,23 +74,27 @@ subsetCase(object, value)
 }
 \arguments{
 \item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
-
-\item{object}{imcExperiment}
 }
 \description{
-returns the expression of IMC data
+a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.
 
-returns the expression of IMC data
+finds the intensities getter.
+
+finds the spatial coords, getter.
+
+finds the neighborhood information.
+
+finds the network information.
+
+finds the distance information.
+
+finds the morphology information.
+
+finds the label information.
+
+subsets the imcExperiment to a case along with all slots.
+
+method to subset the slots, requires colData with column "ROIID"
 }
 \section{Slots}{
 
