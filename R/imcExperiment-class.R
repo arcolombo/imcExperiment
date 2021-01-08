@@ -18,7 +18,6 @@
 #' }
 #' @rdname imcExperiment-class
 #' @export
-#' @import methods
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 .imcExperiment<-setClass("imcExperiment",
 	slots=representation(coordinates="matrix",
