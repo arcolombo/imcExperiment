@@ -193,7 +193,7 @@ setMethod("getLabel", "imcExperiment",
 
 
 
-#' subsets the imcExperiment to a case along with all slots.
+#' subsets the imcExperiment to a case along with all slots for a single ROI, using for distance analysis
 #' @name imcExperiment-class
 #'
 #' @rdname imcExperiment-class
@@ -204,6 +204,8 @@ setGeneric("subsetCase",
 
 #' method to subset the slots, requires colData with column "ROIID"
 #' @rdname imcExperiment-class
+#' @param object IMC container
+#' @param value this is ROIID
 #' @export
 setMethod("subsetCase", "imcExperiment",
              function(object,value){
@@ -219,6 +221,36 @@ setMethod("subsetCase", "imcExperiment",
              return(roi)
             })
 
+
+
+
+#' subsets the imcExperiment to a case along with all slots for a selected multiple ROIs.
+#' @name imcExperiment-class
+#'
+#' @rdname imcExperiment-class
+#' @param object imcExperiment
+#' @export
+setGeneric("selectCases",
+           function(object,value) standardGeneric("selectCases"))
+
+#' method to subset the slots, requires colData with column "ROIID"
+#' @rdname imcExperiment-class
+#' @param object IMC container
+#' @param value this is ROIID
+#' @export
+setMethod("selectCases", "imcExperiment",
+          function(object,value){
+            id<-which(colData(object)[,"ROIID"]%in%value)
+            roi<-object[,id]
+            roi@coordinates<-object@coordinates[id,]
+            roi@cellIntensity<-object@cellIntensity[,id]
+            roi@neighborHood<-as.matrix(object@neighborHood[id,])
+            roi@network<-as.matrix(object@network[id,])
+            roi@distance<-as.matrix(object@distance[id,])
+            roi@morphology<-as.matrix(object@morphology[id,])
+            roi@uniqueLabel<-object@uniqueLabel[id]
+            return(roi)
+          })
 
 
 

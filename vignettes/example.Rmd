@@ -353,7 +353,7 @@ d_se <- generateClusters(d_se)
 
 ```
 
-### Phenograph cluster
+### IMC container and Phenograph cluster neighborhood 
 * Phenograph an IMC contrainer and heatmap result.
 ```{r pheno}
 
@@ -488,6 +488,47 @@ library(SingleCellExperiment)
  ## change into a daFrame (CATALYST)
 
  ## 
+ 
+ rd<-DataFrame(sample_id=colData(imc))
+ rd$group_id<-key[match(rd$sample_id.ROIID,key$Name),'Treatment']
+ 
+ exper_info<-key[,c("Name","Treatment")]
+  colnames(exper_info)<-c("sample_id","group_id")
+ 
+  marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imc),"_"),function(x) x[3]),
+              marker_name=rownames(imc),
+              marker_class=c(rep("type",13),
+                             rep("state",18),
+                             rep("none",13)))
+
+ pn<-percentilenormalize(data=t(assays(imc)$loglim),percentile=0.99 )
+
+  ## Switching into Summarized Experiment class.
+    dse<-SummarizedExperiment(assays=SimpleList(exprs=pn),
+                           metadata=list(experiment_info=exper_info),
+                           rowData=rd,
+                           colData=DataFrame(marker_info)
+                           )
+   stopifnot(all(colnames(dse)==marker_info$marker_name))
+
+ # Transform data?
+ dse <- transformData(dse)
+## maybe look a the normalization.
+# Generate clusters
+dse <- (generateClusters(dse,meta_clustering=TRUE,meta_k=30,seed_clustering=828))
+
+ ## examine each cluster.
+cluster<-rowData(dse)
+ data<-data.frame(t(logcounts(imc)),cluster)
+ plot_clustering_heatmap_wrapper(expr=data[,rownames(imc)],
+                                 cell_clustering=data$cluster_id)
+ 
+ ### sub-clustering 1 cluster.
+ #dse_1<-dse[which(rowData(dse)$cluster_id==1),]
+#  dse_1<-(generateClusters(dse_1,meta_clustering=TRUE,meta_k=30,seed_clustering=828))
+#plot_clustering_heatmap_wrapper(expr=assays(dse_1)$exprs,
+ #                                cell_clustering=rowData(dse_1)$cluster_id)
+ 
 
 
 ```
