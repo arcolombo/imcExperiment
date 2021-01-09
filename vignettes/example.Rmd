@@ -15,7 +15,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 
 # Heatmap plotting script (helper)
 * The heatmap function we do not want to include with this package, but here is the helper function.
-```{r,fig.width=13,fig.height=13}
+```{r,fig.width=11,fig.height=11}
 library(dplyr)
 library(RColorBrewer)
 library(pheatmap)
@@ -362,7 +362,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
 ### IMC container and Phenograph cluster neighborhood 
 * Phenograph an IMC contrainer and heatmap result.
-```{r pheno,eval=TRUE,fig.width=13,fig.height=13}
+```{r pheno,eval=TRUE,fig.width=11,fig.height=11}
 
  ### create  phenotypes via Rphenograph
   ##run phenograph
@@ -379,7 +379,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 * raw input from histoCAT and creating an IMC container.
 * containerizes the intensities, neighborhood results, morphology, and computes nearest distances and stores it.
 * Can use a hyperframe to identify distances quickly.
-```{r,fig.width=13,fig.height=13}
+```{r,fig.width=11,fig.height=11}
  ###
 
 ### reading in a directory of histoCAT csv files.
@@ -473,7 +473,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
 ### Changing class from IMC to SummarizedExperiment
 * IMC container can change to SummarizedExperiment and the FlowSOM algorithm can be used.
-```{r classChange,fig.width=13,fig.height=13}
+```{r classChange,fig.width=11,fig.height=11}
   library(CATALYST)
 library(cowplot)
 library(flowCore)

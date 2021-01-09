@@ -1,4 +1,4 @@
-## ----fig.width=13,fig.height=13-----------------------------------------------
+## ----fig.width=11,fig.height=11-----------------------------------------------
 library(dplyr)
 library(RColorBrewer)
 library(pheatmap)
@@ -323,7 +323,7 @@ color_clusters=NULL){
  imc<-x
  x<-NULL
 
-## ----pheno,eval=TRUE,fig.width=13,fig.height=13-------------------------------
+## ----pheno,eval=TRUE,fig.width=11,fig.height=11-------------------------------
 
  ### create  phenotypes via Rphenograph
   ##run phenograph
@@ -335,7 +335,7 @@ color_clusters=NULL){
   ##plot phenograph
   plot_clustering_heatmap_wrapper(myExperiment=imc)
 
-## ----fig.width=13,fig.height=13-----------------------------------------------
+## ----fig.width=11,fig.height=11-----------------------------------------------
  ###
 
 ### reading in a directory of histoCAT csv files.
@@ -425,7 +425,7 @@ color_clusters=NULL){
 
 
 
-## ----classChange,fig.width=13,fig.height=13-----------------------------------
+## ----classChange,fig.width=11,fig.height=11-----------------------------------
   library(CATALYST)
 library(cowplot)
 library(flowCore)
