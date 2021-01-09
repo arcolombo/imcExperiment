@@ -9,7 +9,7 @@ IMC S4 data set containing 2,452 cells and 44 antibody features which include pa
 A data frame of 2,452 cells and histoCAT features
 }
 \source{
-\url{www.usc.edu}
+\url{www.usc.edu/}
 }
 \usage{
 imcData

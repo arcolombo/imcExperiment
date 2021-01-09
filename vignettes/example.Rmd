@@ -1,6 +1,6 @@
 ---
 title: "imcExperiment: containerization of IMC data"
-author: "Anthony Colombo, Erik Gerdtsson"
+author: "Anthony Colombo"
 output: 
   html_vignette:
   toc: true
@@ -8,18 +8,19 @@ output:
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteDepends{arkasData}
-  %\VignetteIndexEntry{Arkas: Repetitive Elements Quantification In Much Less Time}
+  %\VignetteIndexEntry{imcExperiment: containerization of IMC data}
   \usepackage[utf8]{inputenc}   
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 ---
 
 # Heatmap plotting script (helper)
 * The heatmap function we do not want to include with this package, but here is the helper function.
-```{r}
+```{r,fig.width=13,fig.height=13}
 library(dplyr)
 library(RColorBrewer)
 library(pheatmap)
 library(magrittr)
+library(igraph)
 
  ##the rows of the IMC container input are the protein antibody panel, the columns are the cells. (need to transpose for matrix computatoins)
 plot_clustering_heatmap_wrapper<-function(myExperiment=NULL, 
@@ -207,13 +208,13 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
  #7 cells with 10 proteins
  # but the spatial information is 10 rows and this will fail to build.
- x<-imcExperiment(cellIntensity=matrix(1,nrow=7,ncol=10),
-	coordinates=matrix(1,nrow=10,ncol=2),
-	neighborHood=matrix(1,nrow=10,ncol=20),
-	network=matrix(1,nrow=10,ncol=3),
-	distance=matrix(1,nrow=10,ncol=2),
-	uniqueLabel=rep("A",10),
-	ROIID=data.frame(ROIID=rep("A",10)))
+ #x<-imcExperiment(cellIntensity=matrix(1,nrow=7,ncol=10),
+#	coordinates=matrix(1,nrow=10,ncol=2),
+#	neighborHood=matrix(1,nrow=10,ncol=20),
+#	network=matrix(1,nrow=10,ncol=3),
+#	distance=matrix(1,nrow=10,ncol=2),
+#	uniqueLabel=rep("A",10),
+#	ROIID=data.frame(ROIID=rep("A",10)))
 
 
  
@@ -361,11 +362,11 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
 ### IMC container and Phenograph cluster neighborhood 
 * Phenograph an IMC contrainer and heatmap result.
-```{r pheno}
+```{r pheno,eval=TRUE,fig.width=13,fig.height=13}
 
  ### create  phenotypes via Rphenograph
   ##run phenograph
-  require(Rphenograph)
+  library(Rphenograph)
   phenos<-Rphenograph(t(cellIntensity(imc)),k=35)
    pheno.labels<-as.numeric(membership(phenos[[2]]))
    getNetwork(imc)<-matrix(pheno.labels)
@@ -378,7 +379,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 * raw input from histoCAT and creating an IMC container.
 * containerizes the intensities, neighborhood results, morphology, and computes nearest distances and stores it.
 * Can use a hyperframe to identify distances quickly.
-```{r}
+```{r,fig.width=13,fig.height=13}
  ###
 
 ### reading in a directory of histoCAT csv files.
@@ -472,7 +473,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
 ### Changing class from IMC to SummarizedExperiment
 * IMC container can change to SummarizedExperiment and the FlowSOM algorithm can be used.
-```{r classChange}
+```{r classChange,fig.width=13,fig.height=13}
   library(CATALYST)
 library(cowplot)
 library(flowCore)
@@ -559,6 +560,8 @@ cluster<-rowData(dse)
   rownames(imcData)
     # for plot scatter to work need to set the rowData feature in a specific way.
    channel<-sapply(strsplit(rownames(imcData),"_"),function(x) x[3])
+      channel[34:35]<-c("Ir1911","Ir1931")
+
    marker<-sapply(strsplit(rownames(imcData),"_"),function(x) x[2])
     rowData(imcData)<-DataFrame(channel_name=channel,marker_name=marker)
       rownames(imcData)<-marker
