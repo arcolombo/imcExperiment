@@ -1,4 +1,4 @@
-## ----fig.width=11,fig.height=11-----------------------------------------------
+## ----fig.width=11,fig.height=11,message=FALSE---------------------------------
 library(dplyr)
 library(RColorBrewer)
 library(pheatmap)
@@ -166,7 +166,7 @@ color_clusters=NULL){
 
 
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE------------------------------------------------------------
  library(imcExperiment)
   #10 cells with 10 proteins
   # 10 neighbors 
@@ -197,7 +197,7 @@ color_clusters=NULL){
  
 
 
-## ----access,eval=TRUE---------------------------------------------------------
+## ----access,eval=TRUE,message=FALSE-------------------------------------------
 
   #get cellintensities
   cellIntensity(x)
@@ -220,13 +220,13 @@ color_clusters=NULL){
  ## access the coordinates
   getCoordinates(x)
   getCoordinates(x)<-matrix(rnorm(20,0,10),nrow=10,ncol=2)
-  getCoordinates(x)
+head(  getCoordinates(x))
   
  ## access the neighborhood profile.  Note each row must equal the number of cells, but the columns can be extended depending on the radius of interactions.
   ## access the coordinates
   getNeighborhood(x)
   getNeighborhood(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=10)
-  getNeighborhood(x)
+ head( getNeighborhood(x))
 
  ## get the distance usually a square matrix, or can be just first nearest etc. 
     getDistance(x)
@@ -236,7 +236,7 @@ color_clusters=NULL){
  # get morphological features
   getMorphology(x)
   getMorphology(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=60)
-  getMorphology(x)
+  head(getMorphology(x))
 
  ## for each cell we can obtain the ROI that it belongs to
   rowData(x)
@@ -248,7 +248,7 @@ color_clusters=NULL){
    metadata(x)$experiment<-'test'
    metadata(x)
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE------------------------------------------------------------
   ### load the data from package.
   library(imcExperiment)
  ##load the data 1000 cells from IMC experiment.
@@ -323,7 +323,7 @@ color_clusters=NULL){
  imc<-x
  x<-NULL
 
-## ----pheno,eval=TRUE,fig.width=11,fig.height=11-------------------------------
+## ----pheno,eval=TRUE,fig.width=11,fig.height=11,message=FALSE-----------------
 
  ### create  phenotypes via Rphenograph
   ##run phenograph
@@ -402,12 +402,16 @@ color_clusters=NULL){
   ##plot phenograph
   plot_clustering_heatmap_wrapper(myExperiment=x)
 
+## -----------------------------------------------------------------------------
 
  ##store the ROIID in the metadata columns.
   ##access the unique cell labels.
   head(getLabel(x))
   
-     roi<-subsetCase(x,372149 )
+  roi<-subsetCase(x,372149 )
+  roi
+
+## -----------------------------------------------------------------------------
 
   
   ##you can append more clinical features to the columns of the sampleDat data.frame.
@@ -425,7 +429,7 @@ color_clusters=NULL){
 
 
 
-## ----classChange,fig.width=11,fig.height=11-----------------------------------
+## ----classChange,fig.width=9,fig.height=9,message=FALSE-----------------------
   library(CATALYST)
 library(cowplot)
 library(flowCore)
@@ -481,7 +485,7 @@ cluster<-rowData(dse)
  
 
 
-## -----------------------------------------------------------------------------
+## ---- message=FALSE-----------------------------------------------------------
 
 # library(CATALYST)
 #data(sample_ff)

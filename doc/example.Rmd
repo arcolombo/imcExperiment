@@ -15,7 +15,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 
 # Heatmap plotting script (helper)
 * The heatmap function we do not want to include with this package, but here is the helper function.
-```{r,fig.width=11,fig.height=11}
+```{r,fig.width=11,fig.height=11,message=FALSE}
 library(dplyr)
 library(RColorBrewer)
 library(pheatmap)
@@ -185,11 +185,12 @@ color_clusters=NULL){
 ```
 
 # example
- This shows how to construct and IMCexperiment object.
- The input to the imcExperiment object has the cells (columns) and rows are the proteins.  For spatial features, the rows are the cells, and columns are the spatial features.  
-the 2-dim coordinates (x,y), neighborHood features, network assignment, unique Label, ROIID, and distance matrix.
+* The IMC container contains slots for intensity, coordinates, neighborhood features, networking ID, distance measures, morphology, unique cell labels, panel information, and ROIID.
+*  The input to the imcExperiment object has the cells (columns) and rows are the proteins.  
+* For spatial features, the rows are the cells, and columns are the spatial features.  the 2-dim coordinates (x,y), neighborHood features, network assignment, unique Label, ROIID, and distance matrix.
  These data are required for the constructure but can be edited later.
-```{r}
+* The IMC container inherits many function used for SummarizedExperiment classes (assays, etc).
+```{r,message=FALSE}
  library(imcExperiment)
   #10 cells with 10 proteins
   # 10 neighbors 
@@ -222,8 +223,13 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 ``` 
 
 ### Accessors, and setters
- We need to be able to access, and set each slot.  We access the coordinates of your IMC experiment
-```{r access,eval=TRUE}
+* the cellIntensity() function accesses cell Intensity
+* getCoordinates() accesses spatial data.
+* getNeighborhood() access the histoCAT neighborhood features
+* getDistance() accesses distance matrix input.
+* getMorphology() accesses morphology features.
+* the metadata() function can store extras .
+```{r access,eval=TRUE,message=FALSE}
 
   #get cellintensities
   cellIntensity(x)
@@ -246,13 +252,13 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
  ## access the coordinates
   getCoordinates(x)
   getCoordinates(x)<-matrix(rnorm(20,0,10),nrow=10,ncol=2)
-  getCoordinates(x)
+head(  getCoordinates(x))
   
  ## access the neighborhood profile.  Note each row must equal the number of cells, but the columns can be extended depending on the radius of interactions.
   ## access the coordinates
   getNeighborhood(x)
   getNeighborhood(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=10)
-  getNeighborhood(x)
+ head( getNeighborhood(x))
 
  ## get the distance usually a square matrix, or can be just first nearest etc. 
     getDistance(x)
@@ -262,7 +268,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
  # get morphological features
   getMorphology(x)
   getMorphology(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=60)
-  getMorphology(x)
+  head(getMorphology(x))
 
  ## for each cell we can obtain the ROI that it belongs to
   rowData(x)
@@ -277,7 +283,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
 ### From histoCAT to R
 * We use the raw histoCAT output and containerize the data.
-```{r}
+```{r,message=FALSE}
   ### load the data from package.
   library(imcExperiment)
  ##load the data 1000 cells from IMC experiment.
@@ -362,7 +368,7 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
 ### IMC container and Phenograph cluster neighborhood 
 * Phenograph an IMC contrainer and heatmap result.
-```{r pheno,eval=TRUE,fig.width=11,fig.height=11}
+```{r pheno,eval=TRUE,fig.width=11,fig.height=11,message=FALSE}
 
  ### create  phenotypes via Rphenograph
   ##run phenograph
@@ -445,13 +451,26 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
     head(getNetwork(x))
   ##plot phenograph
   plot_clustering_heatmap_wrapper(myExperiment=x)
+```
 
+### Access unique cell ID
+* getLabel(), we can access unique cell ID
+* subsetCase(x,ROIID) can subset to a single ROIID
+* selectCases(x,c("ROI1","ROI2","ROI3")) selects a subset of multiple ROIs.
+```{r}
 
  ##store the ROIID in the metadata columns.
   ##access the unique cell labels.
   head(getLabel(x))
   
-     roi<-subsetCase(x,372149 )
+  roi<-subsetCase(x,372149 )
+  roi
+```
+
+## Distance computations speedily
+* The function 'imcExperimentToHyperFrame(), creates a point pattern useful for distance measures.
+* Given a hyperframe pairwise computations can be done.
+```{r}
 
   
   ##you can append more clinical features to the columns of the sampleDat data.frame.
@@ -472,8 +491,8 @@ the 2-dim coordinates (x,y), neighborHood features, network assignment, unique L
 
 
 ### Changing class from IMC to SummarizedExperiment
-* IMC container can change to SummarizedExperiment and the FlowSOM algorithm can be used.
-```{r classChange,fig.width=11,fig.height=11}
+* IMC container can change to SummarizedExperiment and the FlowSOM algorithm can be used for cell classification.
+```{r classChange,fig.width=9,fig.height=9,message=FALSE}
   library(CATALYST)
 library(cowplot)
 library(flowCore)
@@ -529,12 +548,14 @@ cluster<-rowData(dse)
  
 
 ```
-### IMC and flowSet conversions
-* utilize CATALYST package for IMC we can see scatter plots.
+
+
+## IMC and flowSet conversions
+* utilize CATALYST package for IMC we can see scatter plots after converting to FlowSets.
 * the rownames for IMC are set to the panel names, and we can split these to create the marker and metal.
 * The ROIID is useful for quickly creating a FlowSet object as a class inheritance method.
 * The rownames of IMC container are usually in "Cell_Marker_ChannelMetal"
-```{r}
+```{r, message=FALSE}
 
 # library(CATALYST)
 #data(sample_ff)
@@ -624,7 +645,7 @@ cluster<-rowData(dse)
 ```
 
 
-### Diffcyt package tutorial
+### Diffcyt package tutorial (extra)
 * Given a flowSet object we can utilize the diffCyt package for measuring phenotype differences.
 * This code section is an example of diffcyt from their manual.
 * Creates a random summarized experiment.
