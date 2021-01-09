@@ -5,6 +5,7 @@ Containerizing IMC data into the SummarizedExperiment class, this container inhe
 ``` r
  library(CATALYST)
  library(diffcyt)
+ library(imcExperiment)
  data(imcData)
  head(rownames(imcData))
     # for plot scatter to work need to set the rowData feature in a specific way.
