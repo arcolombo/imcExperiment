@@ -1,6 +1,6 @@
 ---
 title: "imcExperiment: containerization of IMC data"
-author: "Anthony Colombo, Erik Gerdtsson"
+author: "Anthony Colombo"
 output: 
   html_vignette:
   toc: true
