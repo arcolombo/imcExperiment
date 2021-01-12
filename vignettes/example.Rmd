@@ -7,7 +7,6 @@ output:
   number_sections: true
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteDepends{arkasData}
   %\VignetteIndexEntry{imcExperiment: containerization of IMC data}
   \usepackage[utf8]{inputenc}   
 date: "`r format(Sys.time(), '%d %B, %Y')`"

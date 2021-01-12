@@ -2,7 +2,27 @@
 #' Data set containing 1,000 cells and 73 features which include panel antibody, neighborhood computations, and phenograph clustering.
 #' @format A data frame of 1,000 cells and histoCAT features
 #' \describe{
-#'   \item{Cell features}{raw signal intensity}
+#'   \item{Area}{feature from histoCAT}
+#'   \item{CellId}{feature from histoCAT}
+#'   \item{Cell_CCR4Sm149Di_Sm149}{feature from histoCAT}
+#'   \item{Cell_CD15Dy164Di_Dy164}{feature from histoCAT}
+#'   \item{Cell_CD16Nd146Di_Nd146}{feature from histoCAT}
+#'   \item{Cell_CD206Tm169Di_Tm169}{feature from histoCAT}
+#'   \item{Cell_CD20Sm147Di_Sm147}{feature from histoCAT}
+#'   \item{Cell_CD30Ho165Di_Ho165}{feature from histoCAT}
+#'   \item{Cell_CD31Nd144Di_Nd144}{feature from histoCAT}
+#'   \item{Cell_CD34Sm152Di_Sm152}{feature from histoCAT}
+#'   \item{Cell_CD3Er170Di_Er170}{feature from histoCAT}
+#'   \item{Cell_CD45RAGd155Di_Gd155}{feature from histoCAT}
+#'   \item{Cell_CD45ROYb173Di_Yb173}{feature from histoCAT}
+#'   \item{Cell_CD4Gd156Di_Gd156}{feature from histoCAT}
+#'   \item{Cell_CD68Tb159Di_Tb159 }{feature from histoCAT}
+#'   \item{Cell_CD8Dy162Di_Dy162}{feature from histoCAT}
+#'   \item{Cell_CXCR3Nd142Di_Nd142}{feature from histoCAT}
+#'   \item{Cell_CCR4Sm149Di_Sm149}{feature from histoCAT}
+#'   \item{Cell_CCR4Sm149Di_Sm149}{feature from histoCAT}
+#'   \item{Cell_CCR4Sm149Di_Sm149}{feature from histoCAT}
+#'   \item{Cell_CCR4Sm149Di_Sm149}{feature from histoCAT}
 #'   \item{morphological features}{Area, Eccentricity, etc.}
 #'   \item{Position}{x,y position}
 #'   \item{neighborhood data}{the 10 neighborhors for each cell are computed, the number are the id of each neighbor}
