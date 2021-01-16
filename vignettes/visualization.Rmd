@@ -1,0 +1,339 @@
+---
+title: "imcExperiment: containerization of IMC data"
+author: "Anthony Colombo"
+output: 
+  html_vignette:
+  toc: true
+  number_sections: true
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{imcExperiment: containerization of IMC data}
+  \usepackage[utf8]{inputenc}   
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+---
+
+## Visualization interface connection
+* We can format an IMC experiment to connect with a shiny-application for visualization of the clusters (CytofRUV)
+* Formatting and the meta-data construction is required.
+
+### Batch correction using CyTOF library
+* The CyTOF batch correction libraries require FCS files, so we can convert the IMC data into a flowSET and write FCS files.
+* Create TSNE and UMAP networking, and launch the shinyAPP before normalization.
+* Starting with IMC container, we can create a flowSet, and apply CytofRUV package for exploration.
+* Note we have to append a "Time" variable (dummy) which is required by CytofRUV.
+* We create a metadata sheet that has "file_name","ROIID", condition, patient_id, batch, sample_id, and replicate number.
+* The panel sheet must have fcs_colname, antigen, marker_class.  metal column is optional included.
+
+```{r batchCorrect, message=FALSE}
+ library(CytofRUV)
+library(CytofRUV)
+library(CATALYST)
+library(flowCore)
+library(ggplot2)
+library(readxl)
+library(ruv)
+library(purrr)
+library(FlowSOM)
+library(SummarizedExperiment)
+library(ConsensusClusterPlus)
+library(SingleCellExperiment)
+library(shiny)
+library(shinyjs)
+library(shinydashboard)
+library(writexl)
+library(ComplexHeatmap)
+library(shinycssloaders)
+ library(imcExperiment)
+
+ #load the IMC data
+   library(imcExperiment)
+ ##load the data 1000 cells from IMC experiment.
+  data(imcData)
+  imcData
+
+  background<-c("Cell_191Ir_Ir191",
+		"Cell_193Ir_Ir193",
+	        "Cell_104Ru_Ru104",
+                "Cell_120Sn_Sn120",
+                "Cell_127I_I127",
+                "Cell_131Xe_Xe131",
+                "Cell_133Cs_Cs133",
+                "Cell_138Ba_Ba138" ,
+                "Cell_190Os_Os190",
+                "Cell_208Pb_Pb208",
+                "Cell_80ArAr_ArAr80" ) 
+
+		
+	lineage<-c("Cell_CD11b_Sm149",
+		"Cell_CD138_Eu151",
+	        "Cell_CD14_Nd144",
+                "Cell_CD15_Dy164",
+                "Cell_CD163_Gd155",
+	        "Cell_CD16_Nd146",
+                "Cell_CD20_Sm147",
+                "Cell_CD31_Dy161",
+	        "Cell_CD3_Er170" ,
+                "Cell_CD4_Gd156",
+                "Cell_CD68_Nd150",
+          	"Cell_CD8a_Dy162",
+	        "Cell_FOXP3_Dy163")
+	
+	
+  induc<-c("Cell_Caspase3_Lu175",
+	   "Cell_Granzyme_Er167",
+	   "Cell_HLAABC_Yb172",
+	   "Cell_HLADR_Yb174",
+	   "Cell_HLAE_Sm152",
+           "Cell_Histone3_Yb171",
+           "Cell_IDO_Yb173" ,
+	   "Cell_Ki67_Er168" ,
+           "Cell_LAG3_Eu153" ,
+           "Cell_MUM1_Pr141",
+	   "Cell_NKG2A_Nd143",
+           "Cell_NKG2D_Nd148",
+           "Cell_NKp46_Er166" ,
+           "Cell_PD1_Ho165",
+           "Cell_PDL1_Tb159" ,
+           "Cell_Reolysin_Gd160",
+           "Cell_TIM3_Sm154",
+           "Cell_ULBP256_Yb176")
+   ##caspase is empty blank channel.
+          # "Cell_Caspase_Lu175" )
+		
+ 	morph<-c("Area",
+	"Eccentricity",
+	"Solidity",
+	"Extent",
+	"EulerNumber",
+	"Perimeter",
+	"MajorAxisLength",
+	"MinorAxisLength",
+	"Orientation",
+	"Percent_Touching",
+	"Number_Neighbors")
+
+ 
+  ##output from histoCAT to R
+ 	  ex<-as.data.frame(t(cellIntensity(imc)))
+    ex$Time<-rnorm(nrow(ex))
+   #append "Time" variable into a demo IMC container.
+       ## For CytofRUV we need Time 
+
+   imc<-imcExperiment(cellIntensity=as.matrix(t(ex)),
+	coordinates=getCoordinates(imcData),
+	neighborHood=getNeighborhood(imcData),
+	network=getNetwork(imcData),
+	distance=matrix(1,nrow=nrow(ex),ncol=10),
+	morphology=getMorphology(imcData),
+	panel=colnames(ex),
+	uniqueLabel=getLabel(imcData),
+	ROIID=data.frame(ROIID=colData(imcData)$ROIID))
+
+   ##set rowData
+    marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imc),"_"),function(x) x[3]),
+              marker_name=rownames(imc),
+              marker_class=c(rep("type",13),
+                             rep("state",18),
+                              rep("none",14)))
+  marker_info$metal<-substring(marker_info$channel_name,1,2)
+  marker_info$mass<-as.numeric(substring(marker_info$channel_name,3,nchar(marker_info$channel_nam)))
+  marker_info[which(marker_info$channel_name=='ArAr80'),'mass']<-80
+  rowData(imc)<-marker_info
+   rowData(imc)$channel_name[is.na(rowData(imc)$channel_name)]<-c("Time")
+
+   
+  (fsimc <- sce2fcs(imc[c(1:5,7:12,14:33,45),], split_by = "ROIID"))
+  
+  # fpath <- system.file("inst/extdata", "my_raw_data.csv", package="my_package")
+
+   
+   ## write FCS files. 
+ output_dir="test_output"
+ if (!dir.exists(output_dir)){
+    dir.create(output_dir)
+ }
+ 
+  wd_data=file.path(getwd(),output_dir)
+ 
+
+
+ 
+ ## set up metaData
+  #set up metadata with replicates.
+ metaData<-data.frame(file_name=paste0(colData(imc)$ROIID%>%unique,".fcs"))
+ metaData$ROIID<-gsub(".fcs","",metaData$file_name)
+  metaData$condition<-c("PRE","POST","PRE","POST","POST")
+ metaData$patient_id<-paste0("M",c(1,1,2,3,3))
+ metaData$batch<- c(1,1,1,2,2)
+metaData$sample_id<-paste0(metaData$patient_id,"_",metaData$condition)
+metaData$replicate<-c("r1","r2","r1","r1","r2")
+  metaData$sample_id<-paste0(metaData$sample_id,"_",metaData$replicate)
+
+
+ ## panel info
+ pan<-data.frame(fcs_colname=colnames(fsimc[[1]]),
+                 antigen=rownames(imc)[c(1:5,7:12,14:33,45)],
+                 marker_class=c(rep("type",11),
+                             rep("state",20),
+                             rep("none",1)))
+ 
+ ##
+
+
+## write out to FCS and fake meta data
+  ##write out FCS
+ write.flowSet(fsimc,outdir=output_dir)
+  write_xlsx(metaData,path=file.path(wd_data,"Metadata.xlsx"))
+  write_xlsx(pan,path=file.path(wd_data,"Panel.xlsx"))
+
+
+ ##load
+    ## drops the 'none' marker
+ metadata_filename="Metadata.xlsx"
+  panel_filename="Panel.xlsx"
+  seed=1234
+  clusters_nb=20
+  ## Loading the data
+  data=load_data(wd_data,metadata_filename,panel_filename)
+  ## Cluster the data
+  data$daf=cluster_data(data$daf,seed,markers_to_use=data$lineage_markers,clusters_nb)
+  data
+```
+
+### Apply the Shiny-App
+* The GUI interface can be launched by selecting the number of cells subset.
+```{r}
+
+  
+  ## Define parameters to use for R-Shiny
+  daf=data$daf
+  md=data$md
+  seed=1234
+  # Number of cells displayed for the Distribution of protein expression plot
+  n_subset_marker_specific <- 150
+  
+  # Running Dimension Reduction -> TSNE & UMAP
+  set.seed(seed)
+  
+  # Number of cells for tSNE plots marker specific
+  TSNE_subset <- 75
+  print("Running TSNE")
+  daf <- CATALYST::runDR(daf, dr = "TSNE", cells = TSNE_subset)
+  
+  # Number of cells for UMAP plots marker specific
+  UMAP_subset <- 75
+  print("Running UMAP")
+  daf <- runDR(daf, "UMAP", cells = UMAP_subset)
+  
+  ## Launch Shiny
+  # For a subset of the data, define the number of cells for diagnostic plots
+  n_subset <- 500
+  sub_daf <- daf[, sample(ncol(daf), n_subset)]
+  
+  ## For the full dataset: 
+  # sub_daf <- daf
+  
+  panel=data$panel
+```
+
+### Launch Shiny
+```{r, eval=FALSE}
+  
+    CytofRUV::launch_Shiny(daf)
+
+
+```
+
+## Normalize
+* Given a value of k, the normalize function writes out normalized files.
+```{r,message=FALSE}
+ library(magrittr)
+
+#dir_name_norm_data = get_directory()
+dir_name_norm_data="CytofRUV_Norm_data_test"
+raw_data <- data.frame(sample = data$daf$sample_id, cluster=cluster_ids(data$daf,"meta20"), t(SummarizedExperiment::assay(data$daf,"exprs")))
+colnames(raw_data) <- gsub("^X", "",  colnames(raw_data))
+
+## using the replicate samples from the multiple ROI.
+rep_samples=list(as.character(data$md[which(data$md$replicate=='r2'),'sample_id']%$%sample_id))
+#we have some 0s for DNA channels that we set to dummy
+raw_data$Cell_DNA1_Ir191<-raw_data$Cell_DNA2_Ir193<-rnorm(nrow(raw_data))
+
+#20 meta-clusters defined originally
+cluster_list_rep_samples <- list(seq(1,20))
+k_value <- 2
+seed=1234
+normalise_data(data=data,
+               raw_data=raw_data,
+               rep_samples=rep_samples,
+               norm_clusters=cluster_list_rep_samples,
+               k=k_value,
+               num_clusters=clusters_nb,
+               wd_data=wd_data,
+               dir_norm_data=dir_name_norm_data)
+
+
+## loading the normalized data
+
+wd_norm=file.path(wd_data,dir_name_norm_data)
+  metadata_norm_filename="Norm_Metadata.xlsx"
+  panel_norm_filename="Norm_Panel.xlsx"
+  seed=1234
+  clusters_nb=40
+  ## Loading the data
+  norm_data=load_data(wd_norm,
+                      metadata_norm_filename,
+                      panel_norm_filename,
+                      cofactor = 5)
+  ## Cluster the data
+  norm_data$daf=cluster_data(norm_data$daf,seed,markers_to_use=norm_data$lineage_markers,clusters_nb)
+
+
+ 
+```
+
+
+### Apply Shiny-App to normalized data
+```{r, eval=FALSE}
+
+## apply the Shiny App.
+  daf=norm_data$daf
+  md=norm_data$md
+  seed=1234
+  # Number of cells for diagnostic plots marker specific
+  n_subset_marker_specific <- 1000
+  # Define type of markers
+  daf_type <- daf[SingleCellExperiment::rowData(daf)$marker_class=="type", ]
+  daf_state <- daf[SingleCellExperiment::rowData(daf)$marker_class=="state", ]
+  sub_daf_state <- daf_state[, sample(ncol(daf_state), n_subset_marker_specific)]
+  sub_daf_type <- daf_type[, sample(ncol(daf_type), n_subset_marker_specific)]
+  # Define batch
+  batch_ids <- is.factor(rep(md$batch, nrow(daf)))
+  sampleID_sorted <- md$sample_id[order(md$patient_id)]
+  
+  ## Running Dimension Reduction -> TSNE & UMAP
+  set.seed(seed)
+  # Number of cells for tSNE plots marker specific
+  TSNE_subset <- 1000
+  print("Running TSNE")
+  daf <- runDR(daf, "TSNE", cells = TSNE_subset)
+  
+  # Number of cells for UMAP plots marker specific
+  UMAP_subset <- 1500
+  print("Running UMAP")
+  daf <- runDR(daf, "UMAP", cells = UMAP_subset)
+  
+  # Launch Shiny
+  # For a subset of the data, define the number of cells for diagnostic plots
+  n_subset <- 1000
+  sub_daf <- daf[, sample(ncol(daf), n_subset)]
+  
+  # # For the full dataset: 
+  # sub_daf <- daf
+  
+  panel=data$panel
+  
+  CytofRUV::launch_Shiny(daf)
+
+
+```
