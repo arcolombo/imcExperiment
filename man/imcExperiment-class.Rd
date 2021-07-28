@@ -17,7 +17,7 @@
 \alias{spatial}
 \alias{getNetwork,imcExperiment-method}
 \alias{getNetwork}
-\alias{getNetwork<-,imcExperiment,matrix-method}
+\alias{getNetwork<-,imcExperiment,data.frame-method}
 \alias{getDistance,imcExperiment-method}
 \alias{getDistance}
 \alias{getDistance<-,imcExperiment,matrix-method}
@@ -50,7 +50,7 @@ getNetwork(object)
 
 \S4method{getNetwork}{imcExperiment}(object)
 
-\S4method{getNetwork}{imcExperiment,matrix}(object) <- value
+\S4method{getNetwork}{imcExperiment,data.frame}(object) <- value
 
 getDistance(object)
 
@@ -138,7 +138,7 @@ method to subset the slots, requires colData with column "ROIID"
   \item{\code{coordinates}:}{matrix class containing x,y coordinates}
   \item{\code{cellIntensity}:}{matrix class containing intensities}
   \item{\code{neighborHood}:}{matrix class containing neighborhood results}
-  \item{\code{network}:}{matrix class containing cell assignment cluster}
+  \item{\code{network}:}{data.frame class containing cell assignment cluster}
   \item{\code{distance}:}{matrix class containing cell distance observations}
   \item{\code{uniqueLabel}:}{character class containing labels}
 }

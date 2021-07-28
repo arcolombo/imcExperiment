@@ -18,7 +18,7 @@ imcExperiment<-function(
         coordinates=matrix(1,3,3),
 	cellIntensity=matrix(1,3,3),
 	neighborHood=matrix(1,3,3),
-	network=matrix(1,3,3),
+	network=data.frame(matrix(1,3,3)),
 	distance=matrix(1,3,3),
 	morphology=matrix(1,3,3),
 	uniqueLabel=rep("A",3),
@@ -37,8 +37,8 @@ imcExperiment<-function(
 	if(is(neighborHood,'matrix')==FALSE){
 	neighborHood<-as.matrix(neighborHood)
  	}
-	if(is(network,'matrix')==FALSE){
-	network<-as.matrix(network)
+	if(is(network,'data.frame')==FALSE){
+	network<-as.data.frame((network))
  	}
 	if(is(distance,'matrix')==FALSE){
 	distance<-as.matrix(distance)

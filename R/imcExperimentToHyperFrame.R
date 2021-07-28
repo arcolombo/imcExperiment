@@ -1,8 +1,9 @@
 #' map to point pattern from imcExperiment class.
 #' @param imcExperiment  imcExperiment class
+#' @param phenotypeToUse the network slot can often have many columns, this is the ID for the column number to use in the network slot.
 #' @importFrom spatstat ppp hyperframe unitname
 #' @export
-imcExperimentToHyperFrame<-function(imcExperiment=NULL){
+imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
    #suppressPackageStartupMessages( require(spatstat))
    ##returns the PPP object, with marks as the original data frame.
   ### the imcExperiment structure forces rowData to have a column "ROIID".
@@ -26,10 +27,10 @@ imcExperimentToHyperFrame<-function(imcExperiment=NULL){
 
 #' map to point pattern from imcExperiment class.
 #' @importFrom spatstat ppp hyperframe unitname<-
-.imcExperimentToPPP<-function(caseExperiment=NULL){
+.imcExperimentToPPP<-function(caseExperiment=NULL,phenotypeToUse=1){
  ### for an imcExperiment for 1 case, creates a point pattern.
   casePositions<-getCoordinates(caseExperiment)
-  marksCase<-factor(getNetwork(caseExperiment) )
+  marksCase<-factor(getNetwork(caseExperiment)[,phenotypeToUse])
   mypat<-ppp(casePositions[,"X_position"],casePositions[,"Y_position"],
 	c(min(casePositions[,"X_position"]),max(casePositions[,"X_position"])),
 	c(min(casePositions[,"Y_position"]),max(casePositions[,"Y_position"])),

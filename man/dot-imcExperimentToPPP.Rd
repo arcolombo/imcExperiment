@@ -4,7 +4,7 @@
 \alias{.imcExperimentToPPP}
 \title{map to point pattern from imcExperiment class.}
 \usage{
-.imcExperimentToPPP(caseExperiment = NULL)
+.imcExperimentToPPP(caseExperiment = NULL, phenotypeToUse = 1)
 }
 \description{
 map to point pattern from imcExperiment class.

@@ -11,7 +11,7 @@
 #'   \item{\code{coordinates}:}{matrix class containing x,y coordinates}
 #'   \item{\code{cellIntensity}:}{matrix class containing intensities}
 #'   \item{\code{neighborHood}:}{matrix class containing neighborhood results}
-#'   \item{\code{network}:}{matrix class containing cell assignment cluster}
+#'   \item{\code{network}:}{data.frame class containing cell assignment cluster}
 #'   \item{\code{distance}:}{matrix class containing cell distance observations}
 #'   \item{\code{uniqueLabel}:}{character class containing labels}
 #' }
@@ -22,7 +22,7 @@
 	slots=representation(coordinates="matrix",
 				cellIntensity="matrix",
 				neighborHood="matrix",
-				network="matrix",
+				network="data.frame",
 				distance='matrix',
 				morphology='matrix',
 				uniqueLabel="character"),

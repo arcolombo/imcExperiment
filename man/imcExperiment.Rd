@@ -11,7 +11,7 @@ imcExperiment(
   coordinates = matrix(1, 3, 3),
   cellIntensity = matrix(1, 3, 3),
   neighborHood = matrix(1, 3, 3),
-  network = matrix(1, 3, 3),
+  network = data.frame(matrix(1, 3, 3)),
   distance = matrix(1, 3, 3),
   morphology = matrix(1, 3, 3),
   uniqueLabel = rep("A", 3),

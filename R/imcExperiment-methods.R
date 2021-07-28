@@ -121,7 +121,7 @@ setMethod("getNetwork", "imcExperiment",
 
 #' re-assigns the network assignment (matrix)
 #' @param object is IMC container
-#' @param value matrix rows cells, columns are phenograph network ID
+#' @param value data.frame rows cells, columns are phenograph network ID
 #' @export
 setGeneric("getNetwork<-",function(object,value) standardGeneric("getNetwork<-"))
 
@@ -130,7 +130,7 @@ setGeneric("getNetwork<-",function(object,value) standardGeneric("getNetwork<-")
 #' @param value matrix rows cells, columns are phenotype cluster ID
 #' @aliases getNetwork imcExperiment-method
 #' @export
-setMethod("getNetwork<-",c("imcExperiment", "matrix"),
+setMethod("getNetwork<-",c("imcExperiment", "data.frame"),
             function(object,value){
              object@network<-value
              return(object)
@@ -249,7 +249,7 @@ setMethod("subsetCase", "imcExperiment",
              roi@coordinates<-object@coordinates[id,]
              roi@cellIntensity<-object@cellIntensity[,id]
              roi@neighborHood<-as.matrix(object@neighborHood[id,])
-             roi@network<-as.matrix(object@network[id,])
+             roi@network<-as.data.frame(object@network[id,])
              roi@distance<-as.matrix(object@distance[id,])
              roi@morphology<-as.matrix(object@morphology[id,])
              roi@uniqueLabel<-object@uniqueLabel[id]
@@ -282,7 +282,7 @@ setMethod("selectCases", "imcExperiment",
             roi@coordinates<-object@coordinates[id,]
             roi@cellIntensity<-object@cellIntensity[,id]
             roi@neighborHood<-as.matrix(object@neighborHood[id,])
-            roi@network<-as.matrix(object@network[id,])
+            roi@network<-as.data.frame(object@network[id,])
             roi@distance<-as.matrix(object@distance[id,])
             roi@morphology<-as.matrix(object@morphology[id,])
             roi@uniqueLabel<-object@uniqueLabel[id]

@@ -15,170 +15,6 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 # Heatmap plotting script (helper)
 * The heatmap function we do not want to include with this package, but here is the helper function.
 ```{r,fig.width=11,fig.height=11,message=FALSE}
-library(dplyr)
-library(RColorBrewer)
-library(pheatmap)
-library(magrittr)
-library(igraph)
-
- ##the rows of the IMC container input are the protein antibody panel, the columns are the cells. (need to transpose for matrix computatoins)
-plot_clustering_heatmap_wrapper<-function(myExperiment=NULL, 
-  useMedians=TRUE,
- color_clusters=NULL){
-  
-  expr<-(cellIntensity(myExperiment))
-  cell_clustering<-(getNetwork(myExperiment))
-
-   expr<-t(as.matrix(expr))
-   
- if(is.null(color_clusters)==TRUE){
-  color_clusters <- c("#DC050C", "#FB8072", "#1965B0", "#7BAFDE", "#882E72", 
-  "#B17BA6", "#FF7F00", "#FDB462", "#E7298A", "#E78AC3", 
-  "#33A02C", "#B2DF8A", "#55A1B1", "#8DD3C7", "#A6761D", 
-  "#E6AB02", "#7570B3", "#BEAED4", "#666666", "#999999", 
-  "#aa8282", "#d4b7b7", "#8600bf", "#ba5ce3", "#808000", 
-  "#aeae5c", "#1e90ff", "#00bfff", "#56ff0d", "#ffff00")
- }
-
-  # Calculate the median expression 
-  expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
-    group_by(cell_clustering) %>% 
-    summarize_all(funs(median))
- 
-  if(useMedians==TRUE){
-  expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
-    group_by(cell_clustering) %>% 
-    summarize_all(funs(median))
-   }else{
-   expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
-    group_by(cell_clustering) %>% 
-    summarize_all(funs(mean))
- }
-  # Calculate cluster frequencies
-  clustering_table <- as.numeric(table(cell_clustering))
-  
-  # This clustering is based on the markers that were used for the main clustering
-  d <- dist(expr_median[, colnames(expr)], method = "euclidean")
-  cluster_rows <- hclust(d, method = "average")
-   expr_heat <- as.matrix(expr_median[, colnames(expr)])
-  rownames(expr_heat) <- expr_median$cell_clustering
- 
-  labels_row <- paste0(rownames(expr_heat), " (", 
-    round(clustering_table / sum(clustering_table) * 100, 2), "%)")
-  labels_col <- colnames(expr_heat)
-  
-  # Row annotation for the heatmap
-  annotation_row <- data.frame(cluster = factor(expr_median$cell_clustering))
-  rownames(annotation_row) <- rownames(expr_heat)
-  
-  color_clusters <- color_clusters[1:nlevels(annotation_row$cluster)]
-  names(color_clusters) <- levels(annotation_row$cluster)
-  annotation_colors <- list(cluster = color_clusters)
-  annotation_legend <- FALSE
-  
-  # Colors for the heatmap
-  #library(RColorBrewer);
-  color <- colorRampPalette(rev(brewer.pal(n = 9, name = "RdYlBu")))(100)
-  
-  pheatmap(expr_heat, color = color, 
-    cluster_cols = FALSE, cluster_rows = cluster_rows, 
-    labels_col = labels_col, labels_row = labels_row, 
-    display_numbers = TRUE, number_color = "black", 
-    fontsize = 12, fontsize_number = 12,
-    annotation_row = annotation_row, annotation_colors = annotation_colors,
-    annotation_legend = annotation_legend)
-}
-
-
-
-
-plot_matrix_heatmap_wrapper<-function(expr=NULL, 
-  cell_clustering=NULL, cluster_merging = NULL,useMedians=TRUE,useQuantiles=FALSE,
-color_clusters=NULL){
-  ## cluster_merging should be character merging vector of 29 or so clusters. this is input from the ANNOTATION object.  not a matched object level.
-   expr<-as.matrix(expr)
-  if(useQuantiles==TRUE){
-  ##max min normalization
-  library(matrixStats)
-  rng <- colQuantiles(expr, probs = c(0.001, 0.999))
-  expr01 <- t((t(expr) - rng[, 1]) / (rng[, 2] - rng[, 1]))
-  expr01[expr01 < 0] <- 0
-  expr01[expr01 > 1] <- 1
-  }else{
-   expr01<-expr 
-
-  }
-
- if(is.null(color_clusters)==TRUE){
-  color_clusters <- c("#DC050C", "#FB8072", "#1965B0", "#7BAFDE", "#882E72", 
-  "#B17BA6", "#FF7F00", "#FDB462", "#E7298A", "#E78AC3", 
-  "#33A02C", "#B2DF8A", "#55A1B1", "#8DD3C7", "#A6761D", 
-  "#E6AB02", "#7570B3", "#BEAED4", "#666666", "#999999", 
-  "#aa8282", "#d4b7b7", "#8600bf", "#ba5ce3", "#808000", 
-  "#aeae5c", "#1e90ff", "#00bfff", "#56ff0d", "#ffff00")
- }
-
-  # Calculate the median expression 
-  library(dplyr)
-  expr_median <- data.frame(expr, cell_clustering = cell_clustering) %>%
-   dplyr::group_by(cell_clustering) %>% 
-    dplyr::summarize_all(funs(median))
- if(useMedians==TRUE){
-  expr01_median <- data.frame(expr01, cell_clustering = cell_clustering) %>%
-    group_by(cell_clustering) %>% 
-    dplyr::summarize_all(funs(median))
-   }else{
-   expr01_median <- data.frame(expr01, cell_clustering = cell_clustering) %>%
-    dplyr::group_by(cell_clustering) %>% 
-   dplyr::summarize_all(funs(mean))
- }
-  # Calculate cluster frequencies
-  clustering_table <- as.numeric(table(cell_clustering))
-   print(dim(expr_median))
-  # This clustering is based on the markers that were used for the main clustering
-  d <- dist(expr_median[, colnames(expr)], method = "euclidean")
-  cluster_rows <- hclust(d, method = "average")
-   expr_heat <- as.matrix(expr01_median[, colnames(expr01)])
-  rownames(expr_heat) <- expr01_median$cell_clustering
- 
-  labels_row <- paste0(rownames(expr_heat), " (", 
-    round(clustering_table / sum(clustering_table) * 100, 2), "%)")
-  labels_col <- colnames(expr_heat)
-  
-  # Row annotation for the heatmap
-  annotation_row <- data.frame(cluster = factor(expr01_median$cell_clustering))
-  rownames(annotation_row) <- rownames(expr_heat)
-  
-  color_clusters <- color_clusters[1:nlevels(annotation_row$cluster)]
-  names(color_clusters) <- levels(annotation_row$cluster)
-  annotation_colors <- list(cluster = color_clusters)
-  annotation_legend <- FALSE
-  
-  if(!is.null(cluster_merging)){
-    
-    annotation_row$cluster_merging <- factor(cluster_merging)
-    color_clusters <- color_clusters[1:nlevels(factor(cluster_merging))]
-    names(color_clusters) <- levels(factor(cluster_merging))
-    annotation_colors$cluster_merging <- color_clusters
-    annotation_legend <- TRUE
-  }
-  
-  # Colors for the heatmap
-  library(RColorBrewer);library(pheatmap)
-  color <- colorRampPalette(rev(brewer.pal(n = 9, name = "RdYlBu")))(100)
-  
-  pheatmap::pheatmap(expr_heat, color = color, 
-    cluster_cols = FALSE, cluster_rows = cluster_rows, 
-    labels_col = labels_col, labels_row = labels_row, 
-    display_numbers = TRUE, number_color = "black", 
-    fontsize = 10, fontsize_number = 7,
-    annotation_row = annotation_row, annotation_colors = annotation_colors,
-    annotation_legend = annotation_legend)
-  
-}
-
-
-
 
 
 ```
@@ -191,6 +27,8 @@ color_clusters=NULL){
 * The IMC container inherits many function used for SummarizedExperiment classes (assays, etc).
 ```{r,message=FALSE}
  library(imcExperiment)
+ showClass("imcExperiment")
+
   #10 cells with 10 proteins
   # 10 neighbors 
  # and square distance matrix
@@ -198,7 +36,7 @@ color_clusters=NULL){
   x<-imcExperiment(cellIntensity=matrix(1,nrow=10,ncol=10),
 	coordinates=matrix(1,nrow=10,ncol=2),
 	neighborHood=matrix(1,nrow=10,ncol=10),
-	network=matrix(1,nrow=10,ncol=10),
+	network=data.frame(matrix(1,nrow=10,ncol=10)),
 	distance=matrix(1,nrow=10,ncol=10),
 	morphology=matrix(1,nrow=10,ncol=10),
 	uniqueLabel=paste0("A",seq(1,10)),
@@ -300,7 +138,7 @@ head(  getCoordinates(x))
  ##uniqueLabel
   uniqueLabel<-paste0(data[,"ImageId"],"_",data[,"CellId"])
 
- phenotypes<-as.matrix(data[,grepl("Phenograph",colnames(data))])
+ phenotypes<-data[,grepl("Phenograph",colnames(data))]
  morph<-as.matrix(data[,c("Area","Eccentricity",
 	"Solidity",
 	"Extent",
@@ -367,17 +205,18 @@ head(  getCoordinates(x))
 
 ### IMC container and Phenograph cluster neighborhood 
 * Phenograph an IMC contrainer and heatmap result.
-```{r pheno,eval=TRUE,fig.width=11,fig.height=11,message=FALSE}
+```{r pheno,eval=FALSE,fig.width=11,fig.height=11,message=FALSE}
 
  ### create  phenotypes via Rphenograph
   ##run phenograph
   library(Rphenograph)
+library(igraph)
   phenos<-Rphenograph(t(cellIntensity(imc)),k=35)
-   pheno.labels<-as.numeric(membership(phenos[[2]]))
-   getNetwork(imc)<-matrix(pheno.labels)
+   pheno.labels<-as.numeric(igraph::membership(phenos[[2]]))
+   getNetwork(imc)<-data.frame(cell_clustering=pheno.labels)
    head( getNetwork(imc))
   ##plot phenograph
-  plot_clustering_heatmap_wrapper(myExperiment=imc)
+  #plot_clustering_heatmap_wrapper(myExperiment=imc)
 ```
 
 ### histoCAT analysis
@@ -443,13 +282,13 @@ head(  getCoordinates(x))
    
   ##phenotype
   ##run phenograph
-  require(Rphenograph)
-  phenos<-Rphenograph(t(cellIntensity(x)),k=35)
-   pheno.labels<-as.numeric(membership(phenos[[2]]))
-   getNetwork(x)<-matrix(pheno.labels)
-    head(getNetwork(x))
+  #require(Rphenograph); library(igraph)
+  #phenos<-Rphenograph(t(cellIntensity(x)),k=35)
+  # pheno.labels<-as.numeric(membership(phenos[[2]]))
+  # getNetwork(x)<-data.frame(cell_clustering=pheno.labels)
+  #  head(getNetwork(x))
   ##plot phenograph
-  plot_clustering_heatmap_wrapper(myExperiment=x)
+  #plot_clustering_heatmap_wrapper(myExperiment=x)
 ```
 
 ### Access unique cell ID
@@ -457,32 +296,33 @@ head(  getCoordinates(x))
 * subsetCase(x,ROIID) can subset to a single ROIID
 * selectCases(x,c("ROI1","ROI2","ROI3")) selects a subset of multiple ROIs.
 ```{r}
-
  ##store the ROIID in the metadata columns.
   ##access the unique cell labels.
-  head(getLabel(x))
+  tail(getLabel(x))
   
   roi<-subsetCase(x,372149 )
   roi
+  table(sapply(strsplit(getLabel(roi),"_"),function(x) x[1]))
 ```
 
 ## Distance computations speedily
 * The function 'imcExperimentToHyperFrame(), creates a point pattern useful for distance measures.
 * Given a hyperframe pairwise computations can be done.
+
 ```{r}
 
   
   ##you can append more clinical features to the columns of the sampleDat data.frame.
-  H<-imcExperimentToHyperFrame(imcExperiment=x)
+  H<-imcExperimentToHyperFrame(imcExperiment=x,phenotypeToUse = 1)
   helper<-function(pp=NULL,i=NULL,j=NULL){
   ps<-split(pp)
   nnd<-nncross(ps[[i]],ps[[j]])
   }
  ## 1-NN analysis.
   ## compare cluster 10 to cluster 9
-   eachNND<-with(H,helper(pp=point,i="10",j="8"))
+   #eachNND<-with(H,helper(pp=point,i="10",j="8"))
  ## first choose 2 clusters to compare.
-  sapply(eachNND,function(x) mean(x[,"dist"]))
+ # sapply(eachNND,function(x) mean(x[,"dist"]))
 
 
 
@@ -491,7 +331,7 @@ head(  getCoordinates(x))
 
 ### Changing class from IMC to SummarizedExperiment
 * IMC container can change to SummarizedExperiment and the FlowSOM algorithm can be used for cell classification.
-```{r classChange,fig.width=9,fig.height=9,message=FALSE}
+```{r classChange,eval=FALSE,fig.width=9,fig.height=9,message=FALSE}
   library(CATALYST)
 library(cowplot)
 library(flowCore)
@@ -541,9 +381,9 @@ dse <- (generateClusters(dse,meta_clustering=TRUE,meta_k=30,seed_clustering=828)
  ## examine each cluster.
 cluster<-rowData(dse)
  data<-data.frame(t(logcounts(imcData)),cluster)
- plot_matrix_heatmap_wrapper(expr=data[,rownames(imcData)],
-                                 cell_clustering=data$cluster_id)
- 
+ #plot_matrix_heatmap_wrapper(expr=data[,rownames(imcData)],
+  #                               cell_clustering=data$cluster_id)
+ #
  
 
 ```
@@ -554,27 +394,9 @@ cluster<-rowData(dse)
 * the rownames for IMC are set to the panel names, and we can split these to create the marker and metal.
 * The ROIID is useful for quickly creating a FlowSet object as a class inheritance method.
 * The rownames of IMC container are usually in "Cell_Marker_ChannelMetal"
-```{r, message=FALSE}
+```{r, eval=FALSE,message=FALSE}
 
-# library(CATALYST)
-#data(sample_ff)
-#data(sample_key)
-#head(sample_key)
- #sce <- prepData(sample_ff)
-  #plotScatter(sce,rownames(sce)[1:2])
-  ## the bar code ID events, 
-  # the rows are the bar code channels
-   #(fs <- sce2fcs(sce, split_by = "sample_id"))
 
- ## key notes for strucutre improvements.
-   #subsetting x SCE to y results in SCE
-   # y <- x[i, , drop = FALSE]
-    ## using 'assay' method, returns a matrix.
-#  y <- assay(y, 'counts')
-   ## and should be a class matrix,assay
- #   y <- t(assay(x, 'counts'))
-
- ## improving the IMC class structure.
    ## the assay returns matrix class! required for CATALYST.
   is(assay(imcData,'counts'),'matrix')
   rownames(imcData)
@@ -648,7 +470,7 @@ cluster<-rowData(dse)
 * Given a flowSet object we can utilize the diffCyt package for measuring phenotype differences.
 * This code section is an example of diffcyt from their manual.
 * Creates a random summarized experiment.
-```{r diffcyt,eval=TRUE}
+```{r diffcyt,eval=FALSE}
  library(diffcyt)
 # Function to create random data (one sample)
 d_random <- function(n = 20000, mean = 0, sd = 1, ncol = 20, cofactor = 5) {

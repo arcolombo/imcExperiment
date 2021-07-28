@@ -9,7 +9,7 @@ getNetwork(object) <- value
 \arguments{
 \item{object}{is IMC container}
 
-\item{value}{matrix rows cells, columns are phenograph network ID}
+\item{value}{data.frame rows cells, columns are phenograph network ID}
 }
 \description{
 re-assigns the network assignment (matrix)
