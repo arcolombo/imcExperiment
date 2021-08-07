@@ -6,6 +6,11 @@
 \usage{
 .imcExperimentToPPP(caseExperiment = NULL, phenotypeToUse = 1)
 }
+\arguments{
+\item{caseExperiment}{the subset IMC experiment to cast into a point pattern}
+
+\item{phenotypeToUse}{the cluster id to annotate the pattern}
+}
 \description{
 map to point pattern from imcExperiment class.
 }

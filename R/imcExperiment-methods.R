@@ -1,27 +1,30 @@
 
 #' finds the intensities getter.
-#' @name imcExperiment-class
+#' @name cellIntensity
 #'
-#' @rdname imcExperiment-class
+#' @rdname cellIntensity
 #' @param object imcExperiment
+#' @param ... additional arguments
 #' @export
 setGeneric("cellIntensity",
            function(object,...) standardGeneric("cellIntensity"))
 
-#' @rdname imcExperiment-class
-#' @aliases cellIntensity imcExperiment-method
+#' @rdname cellIntensity
+#' @param object imcExperiment
 #' @export
 setMethod("cellIntensity", "imcExperiment",
           function (object) return(object@cellIntensity))
 
 #' sets cell Intensity slot to a new matrix. rows protein, columns are cells.
+#' @rdname cellIntensity
+#' @param object imc container
+#' @param value matrix rows protein, column are cells
 #' @export
 setGeneric("cellIntensity<-",function(object,value) standardGeneric("cellIntensity<-"))
 
-#' @rdname imcExperiment-class
+#' @rdname cellIntensity
 #' @param object IMC container
 #' @param value matrix rows protein, columns are cells
-#' @aliases cellIntensity imcExperiment-method
 #' @export
 setMethod("cellIntensity<-",c("imcExperiment", "matrix"),
           function(object,value){
@@ -33,16 +36,16 @@ setMethod("cellIntensity<-",c("imcExperiment", "matrix"),
 
 
 #' finds the spatial coords, getter.
-#' @name imcExperiment-class
+#' @name getCoordinates
 #'
-#' @rdname imcExperiment-class
+#' @rdname getCoordinates
 #' @param object imcExperiment
 #' @export
 setGeneric("getCoordinates",
            function(object) standardGeneric("getCoordinates"))
 
-#' @rdname imcExperiment-class
-#' @aliases getCoordinates imcExperiment-method
+#' @rdname getCoordinates
+#' @param object imcExperiment
 #' @export
 setMethod("getCoordinates", "imcExperiment",
           function (object) return(object@coordinates))
@@ -53,10 +56,9 @@ setMethod("getCoordinates", "imcExperiment",
 #' @export
 setGeneric("getCoordinates<-",function(object,value) standardGeneric("getCoordinates<-"))
 
-#' @rdname imcExperiment-class
+#' @rdname getCoordinates
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are x,y
-#' @aliases getCoordinates imcExperiment-method
 #' @export
 setMethod("getCoordinates<-",c("imcExperiment", "matrix"),
             function(object,value){
@@ -66,33 +68,32 @@ setMethod("getCoordinates<-",c("imcExperiment", "matrix"),
 
 
 #' finds the neighborhood information.
-#' @name imcExperiment-class
+#' @name getNeighborhood
 #'
-#' @rdname imcExperiment-class
+#' @rdname getNeighborhood
 #' @param object imcExperiment
+#' @param ... additional arguments
 #' @export
 setGeneric("getNeighborhood",
-           function(object) standardGeneric("getNeighborhood"))
+           function(object,...) standardGeneric("getNeighborhood"))
 
-#' a slot for the histoCAT neighborhood data (matrix) columns are the neighbors
-#' @name imcExperiment-class
-#' @rdname imcExperiment-class
+#' @rdname getNeighborhood
 #' @param object imcExperiment container
-#' @aliases getNeighborhood imcExperiment-method
 #' @export
 setMethod("getNeighborhood", "imcExperiment",
           function (object) return(object@neighborHood))
 
 
 #' slow assignment for the histoCAT neighborhood data (matrix) columns are the neighbors
+#' @rdname getNeighborhood
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are neighborhood histocat output
+#' @export
 setGeneric("getNeighborhood<-",function(object,value) standardGeneric("getNeighborhood<-"))
 
-#' @rdname imcExperiment-class
+#' @rdname getNeighborhood
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are neighborhood histoCAT output
-#' @aliases spatial imcExperiment-method
 #' @export
 setMethod("getNeighborhood<-",c("imcExperiment", "matrix"),
             function(object,value){
@@ -227,20 +228,21 @@ setMethod("getLabel", "imcExperiment",
 
 
 #' subsets the imcExperiment to a case along with all slots for a single ROI, using for distance analysis
-#' @name imcExperiment-class
-#'
-#' @rdname imcExperiment-class
+#' @name subsetCase
+#' @rdname subsetCase
 #' @param object imcExperiment
 #' @param value this is ROIID a single character ID
+#' @param ... additional parameters
+#' @return returns IMC object of a single case
 #' @export
 setGeneric("subsetCase",
-           function(object,value) standardGeneric("subsetCase"))
+           function(object,value,...) standardGeneric("subsetCase"))
 
 #' method to subset the slots, requires colData with column "ROIID"
-#' @name imcExperiment-class
-#' @rdname imcExperiment-class
+#' @rdname subsetCase
 #' @param object IMC container
 #' @param value this is ROIID a single character ID
+#' @return roi  imcExperiment
 #' @export
 setMethod("subsetCase", "imcExperiment",
              function(object,value){
@@ -260,18 +262,18 @@ setMethod("subsetCase", "imcExperiment",
 
 
 #' subsets the imcExperiment to a case along with all slots for a selected multiple ROIs.
-#' @name imcExperiment-class
+#' @name selectCases
 #'
-#' @rdname imcExperiment-class
+#' @rdname selectCases
 #' @param object imcExperiment
 #' @param value vector of ROIID
+#' @param ... additional parameters
 #' @export
 setGeneric("selectCases",
-           function(object,value) standardGeneric("selectCases"))
+           function(object,value,...) standardGeneric("selectCases"))
 
 #' method to subset the slots, requires colData with column "ROIID"
-#' @name imcExperiment-class
-#' @rdname imcExperiment-class
+#' @rdname selectCases
 #' @param object IMC container
 #' @param value this is ROIID vector
 #' @export

@@ -38,6 +38,8 @@ imcExperiment(
 \item{panel}{antibody panel rownames set to rowData}
 
 \item{ROIID}{character for ROI}
+
+\item{...}{additional arguments}
 }
 \description{
 Initializes a imcExperiment and performs some rudimentary checks.

@@ -5,18 +5,9 @@
 \name{imcExperiment-class}
 \alias{imcExperiment-class}
 \alias{.imcExperiment}
-\alias{cellIntensity,imcExperiment-method}
-\alias{cellIntensity}
-\alias{imcExperiment-method}
-\alias{cellIntensity<-,imcExperiment,matrix-method}
-\alias{getCoordinates,imcExperiment-method}
-\alias{getCoordinates}
-\alias{getCoordinates<-,imcExperiment,matrix-method}
-\alias{getNeighborhood}
-\alias{getNeighborhood<-,imcExperiment,matrix-method}
-\alias{spatial}
 \alias{getNetwork,imcExperiment-method}
 \alias{getNetwork}
+\alias{imcExperiment-method}
 \alias{getNetwork<-,imcExperiment,data.frame-method}
 \alias{getDistance,imcExperiment-method}
 \alias{getDistance}
@@ -24,28 +15,11 @@
 \alias{getMorphology,imcExperiment-method}
 \alias{getMorphology}
 \alias{getMorphology<-,imcExperiment,matrix-method}
+\alias{spatial}
 \alias{getLabel,imcExperiment-method}
 \alias{getLabel}
 \title{a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'}
 \usage{
-cellIntensity(object, ...)
-
-\S4method{cellIntensity}{imcExperiment}(object)
-
-\S4method{cellIntensity}{imcExperiment,matrix}(object) <- value
-
-getCoordinates(object)
-
-\S4method{getCoordinates}{imcExperiment}(object)
-
-\S4method{getCoordinates}{imcExperiment,matrix}(object) <- value
-
-getNeighborhood(object)
-
-\S4method{getNeighborhood}{imcExperiment}(object)
-
-\S4method{getNeighborhood}{imcExperiment,matrix}(object) <- value
-
 getNetwork(object)
 
 \S4method{getNetwork}{imcExperiment}(object)
@@ -67,30 +41,14 @@ getMorphology(object)
 getLabel(object)
 
 \S4method{getLabel}{imcExperiment}(object)
-
-subsetCase(object, value)
-
-\S4method{subsetCase}{imcExperiment}(object, value)
-
-selectCases(object, value)
-
-\S4method{selectCases}{imcExperiment}(object, value)
 }
 \arguments{
-\item{object}{IMC container}
+\item{object}{imcExperiment}
 
-\item{value}{this is ROIID vector}
+\item{value}{matrix rows cells, columns are Area, etc.}
 }
 \description{
 a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'
-
-finds the intensities getter.
-
-finds the spatial coords, getter.
-
-finds the neighborhood information.
-
-a slot for the histoCAT neighborhood data (matrix) columns are the neighbors
 
 finds the network information.
 
@@ -107,14 +65,6 @@ morphological features can be stored (matrix) rows are cells and columns are Are
 finds the label information.
 
 unique cell labels can be assigned (vector)
-
-subsets the imcExperiment to a case along with all slots for a single ROI, using for distance analysis
-
-method to subset the slots, requires colData with column "ROIID"
-
-subsets the imcExperiment to a case along with all slots for a selected multiple ROIs.
-
-method to subset the slots, requires colData with column "ROIID"
 }
 \section{Slots}{
 
@@ -129,18 +79,12 @@ method to subset the slots, requires colData with column "ROIID"
 
 \item{\code{distance}}{a matrix of rows are cells and columns are for distance measurements}
 
+\item{\code{morphology}}{matrix of morphological features}
+
 \item{\code{uniqueLabel}}{a character for each cell for unique labeling.}
 }}
 
-\section{Slots}{
-
-\describe{
-  \item{\code{coordinates}:}{matrix class containing x,y coordinates}
-  \item{\code{cellIntensity}:}{matrix class containing intensities}
-  \item{\code{neighborHood}:}{matrix class containing neighborhood results}
-  \item{\code{network}:}{data.frame class containing cell assignment cluster}
-  \item{\code{distance}:}{matrix class containing cell distance observations}
-  \item{\code{uniqueLabel}:}{character class containing labels}
-}
+\section{}{
+NA
 }
 

@@ -13,6 +13,7 @@
 #' @param uniqueLabel	character class each cell is assigned a uniqueLabel
 #' @param panel antibody panel rownames set to rowData
 #' @param ROIID	character for ROI
+#' @param ... additional arguments
 #' @export
 imcExperiment<-function(
         coordinates=matrix(1,3,3),

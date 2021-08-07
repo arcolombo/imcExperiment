@@ -4,6 +4,7 @@
 #' @slot neighborHood  a matrix (rows are cells, columns are features) of neighborhood observations from neighborhood analysis
 #' @slot network      a matrix (rows are cells) and columns are for network assignment information
 #' @slot distance a matrix of rows are cells and columns are for distance measurements
+#' @slot morphology matrix of morphological features
 #' @slot uniqueLabel a character for each cell for unique labeling.
 #' @name imcExperiment-class
 #' @section Slots:
@@ -13,6 +14,7 @@
 #'   \item{\code{neighborHood}:}{matrix class containing neighborhood results}
 #'   \item{\code{network}:}{data.frame class containing cell assignment cluster}
 #'   \item{\code{distance}:}{matrix class containing cell distance observations}
+#'   \item{\code{morphology}{matrix contraing Area, Eccentricity, etc.}
 #'   \item{\code{uniqueLabel}:}{character class containing labels}
 #' }
 #' @rdname imcExperiment-class

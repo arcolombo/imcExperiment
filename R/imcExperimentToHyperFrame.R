@@ -26,6 +26,8 @@ imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
 }##main
 
 #' map to point pattern from imcExperiment class.
+#' @param caseExperiment the subset IMC experiment to cast into a point pattern
+#' @param phenotypeToUse the cluster id to annotate the pattern
 #' @importFrom spatstat ppp hyperframe unitname<-
 .imcExperimentToPPP<-function(caseExperiment=NULL,phenotypeToUse=1){
  ### for an imcExperiment for 1 case, creates a point pattern.
