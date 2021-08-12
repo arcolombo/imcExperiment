@@ -1,39 +1,42 @@
-#' a summarized experiment of IMC runs
-#'
-#' @slot spatial   Spatial coordinate data. x,y coordinates.
+#' a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'
+#' @slot coordinates matrix class containing x,y coordinates
+#' @slot cellIntensity matrix class containing intensity
+#' @slot neighborHood matrix class containing x,y neighbor
+#' @slot network data frame class containing network
+#' @slot distance matrix class containing x,y distances
+#' @slot morphology matrix class containing morphology
+#' @slot uniqueLabel labels
 #' @name imcExperiment-class
-#' @section Slots:
-#' \describe{
-#'   \item{\code{spatial}:}{data.frame class containing x,y coordinates}
-#' }
 #' @rdname imcExperiment-class
 #' @export
-#' @import methods
-#' @importClassesFrom SummarizedExperiment SummarizedExperiment
+#' @importClassesFrom SingleCellExperiment SingleCellExperiment
 .imcExperiment<-setClass("imcExperiment",
-	slots=representation(spatial="matrix",
+	slots=representation(coordinates="matrix",
 				cellIntensity="matrix",
 				neighborHood="matrix",
-				network="matrix",
+				network="data.frame",
+				distance='matrix',
+				morphology='matrix',
 				uniqueLabel="character"),
-	contains="SummarizedExperiment")
+	contains="SingleCellExperiment")
 
-
+#' the rows are the panel names, the columns are the single cells,the column are the single cells to match the SCE designs (scRNA)
+#' @param object imcExperiment object, class imcExperiment container
 #' @export
-#' @importFrom SummarizedExperiment SummarizedExperiment
-
-
+#' @importFrom SingleCellExperiment SingleCellExperiment
 .checkSpatialDimension<-function(object){
-   nspatial<-nrow(object@spatial)
+   nspatial<-nrow(object@coordinates)
+   ndistance<-nrow(object@distance)
    nneigh<-nrow(object@neighborHood)
    nnet<-nrow(object@network)
+   nmorph<-nrow(object@morphology)
    nlab<-length(object@uniqueLabel)
-   nassay<-nrow(object)
-   msg<-nassay==nspatial & nassay==nneigh & nassay==nnet & nassay==nlab
+   nassay<-ncol(object)
+   msg<-nassay==nspatial & nassay==ndistance & nassay==nneigh & nassay==nnet & nassay==nmorph &nassay==nlab
    if(msg==TRUE){
     msg<-NULL
    }else{
-    msg<-"ERROR"
+    msg<-"ERROR: make sure the columns are the cells, and rows are protein"
    }
   return(msg)
 }
@@ -41,6 +44,6 @@
 setValidity("imcExperiment",function(object){
     msg<-.checkSpatialDimension(object)
      if(is.null(msg)){
-      TRUE 
+      TRUE
      }else msg
- })   
+ })

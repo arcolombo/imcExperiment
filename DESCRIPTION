@@ -1,7 +1,8 @@
 Package: imcExperiment
-Title: Containerizes IMC data and pipes to CyTOF libraries.
+Title: Containerizes IMC data and pipes to CyTOF libraries
 Version: 0.0.0.9000
 Authors@R: person("Anthony", "Colombo", email = "anthony.colombo60@gmail.com", role="cre")
+<<<<<<< HEAD
 Description: containerizes IMC data and allows for S4 class structure.
 Depends: R (>= 3.6.2),
 	SummarizedExperiment,
@@ -15,3 +16,18 @@ License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+=======
+Description: containerizes cytometry data and allows for S4 class structure.
+Depends: R (>= 3.6.0),
+	SingleCellExperiment,
+	spatstat,
+	methods
+Imports: SummarizedExperiment,
+          S4Vectors
+Suggests: knitr, rmarkdown
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
+>>>>>>> devel

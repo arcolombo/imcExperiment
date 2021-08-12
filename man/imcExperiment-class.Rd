@@ -5,68 +5,85 @@
 \name{imcExperiment-class}
 \alias{imcExperiment-class}
 \alias{.imcExperiment}
-\alias{cellIntensity,imcExperiment-method}
-\alias{cellIntensity<-,imcExperiment,matrix-method}
-\alias{pData,imcExperiment-method}
-\alias{getSpatial,imcExperiment-method}
-\alias{getSpatial}
-\alias{imcExperiment-method}
-\alias{getSpatial<-,imcExperiment,matrix-method}
-\alias{spatial}
 \alias{getNetwork,imcExperiment-method}
 \alias{getNetwork}
-\alias{getNetwork<-,imcExperiment,matrix-method}
+\alias{imcExperiment-method}
+\alias{getNetwork<-,imcExperiment,data.frame-method}
+\alias{getDistance,imcExperiment-method}
+\alias{getDistance}
+\alias{getDistance<-,imcExperiment,matrix-method}
+\alias{getMorphology,imcExperiment-method}
+\alias{getMorphology}
+\alias{getMorphology<-,imcExperiment,matrix-method}
+\alias{spatial}
 \alias{getLabel,imcExperiment-method}
 \alias{getLabel}
-\alias{subsetCase,imcExperiment-method}
-\title{a summarized experiment of IMC runs}
+\title{a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'}
 \usage{
-\S4method{cellIntensity}{imcExperiment}(object)
-
-\S4method{cellIntensity}{imcExperiment,matrix}(object) <- value
-
-\S4method{pData}{imcExperiment}(object)
-
-getSpatial(object)
-
-\S4method{getSpatial}{imcExperiment}(object)
-
-\S4method{getSpatial}{imcExperiment,matrix}(object) <- value
-
 getNetwork(object)
 
 \S4method{getNetwork}{imcExperiment}(object)
 
-\S4method{getNetwork}{imcExperiment,matrix}(object) <- value
+\S4method{getNetwork}{imcExperiment,data.frame}(object) <- value
+
+getDistance(object)
+
+\S4method{getDistance}{imcExperiment}(object)
+
+\S4method{getDistance}{imcExperiment,matrix}(object) <- value
+
+getMorphology(object)
+
+\S4method{getMorphology}{imcExperiment}(object)
+
+\S4method{getMorphology}{imcExperiment,matrix}(object) <- value
 
 getLabel(object)
 
 \S4method{getLabel}{imcExperiment}(object)
-
-subsetCase(object, value)
-
-\S4method{subsetCase}{imcExperiment}(object, value)
 }
 \arguments{
 \item{object}{imcExperiment}
+<<<<<<< HEAD
+=======
+
+\item{value}{matrix rows cells, columns are Area, etc.}
+>>>>>>> devel
 }
 \description{
-returns the expression of IMC data
+a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'
 
-returns the expression of IMC data
+finds the network information.
 
-returns the phenotypic data associated with a imcExperiment object
+assigns cell cluster assignment to the container. rows are cells and column is the cluster ID
+
+finds the distance information.
+
+distance matrix can be stored in the distance slot for pairwise distance
+
+finds the morphology information.
+
+morphological features can be stored (matrix) rows are cells and columns are Area, etc.
+
+finds the label information.
+
+unique cell labels can be assigned (vector)
 }
 \section{Slots}{
 
 \describe{
-\item{\code{spatial}}{Spatial coordinate data. x,y coordinates.}
+\item{\code{coordinates}}{matrix class containing x,y coordinates}
+
+\item{\code{cellIntensity}}{matrix class containing intensity}
+
+\item{\code{neighborHood}}{matrix class containing x,y neighbor}
+
+\item{\code{network}}{data frame class containing network}
+
+\item{\code{distance}}{matrix class containing x,y distances}
+
+\item{\code{morphology}}{matrix class containing morphology}
+
+\item{\code{uniqueLabel}}{labels}
 }}
-
-\section{Slots}{
-
-\describe{
-  \item{\code{spatial}:}{data.frame class containing x,y coordinates}
-}
-}
 

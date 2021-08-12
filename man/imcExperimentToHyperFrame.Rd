@@ -4,10 +4,12 @@
 \alias{imcExperimentToHyperFrame}
 \title{map to point pattern from imcExperiment class.}
 \usage{
-imcExperimentToHyperFrame(imcExperiment = NULL)
+imcExperimentToHyperFrame(imcExperiment = NULL, phenotypeToUse = 1)
 }
 \arguments{
 \item{imcExperiment}{imcExperiment class}
+
+\item{phenotypeToUse}{the network slot can often have many columns, this is the ID for the column number to use in the network slot.}
 }
 \description{
 map to point pattern from imcExperiment class.

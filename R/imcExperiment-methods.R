@@ -1,90 +1,105 @@
 
+#' finds the intensities getter.
+#' @name cellIntensity
+#'
+#' @rdname cellIntensity
+#' @param object imcExperiment
+#' @param ... additional arguments
+#' @export
 setGeneric("cellIntensity",
-           function(object) standardGeneric("cellIntensity"))
+           function(object,...) standardGeneric("cellIntensity"))
 
-setGeneric("cellIntensity<-",
-           function(object,value) standardGeneric("cellIntensity<-"))
-
-#' @title cell intensity per cell
-#' @description returns the expression of IMC data
-#'
-#' @rdname imcExperiment-class
-#' @export
-setMethod("cellIntensity", "imcExperiment",
-          function (object) return(assays(object)$exprs))
-
-setReplaceMethod("cellIntensity", c("imcExperiment", "matrix"),
-                 function (object, value) {
-                   assays(object)$exprs <- value
-                   return(object)
-                 })
-#' @title cell intensity accessor
-#' @description returns the expression of IMC data
-#'
-#' @rdname imcExperiment-class
-#' @export
-setMethod("cellIntensity<-",c("imcExperiment","matrix"),
-           function(object,value){
- 	assays(object)$exprs<-value
-	return(object)    	 
-   })
-
-
-#' @title Phenotypic data
-#' @description returns the phenotypic data associated with a imcExperiment object
-#' 
-#' @rdname imcExperiment-class
-#' @export
-setMethod("pData", "imcExperiment",
-          function (object) return(colData(object)))
-
-
-
-
-
-setReplaceMethod("pData", c("imcExperiment", "DataFrame"),
-                 function (object, value) {
-                   colData(object) <- value
-                   return(object)
-                 })
-
-setGeneric("pData<-",function(object,value) standardGeneric("pData<-"))
-setMethod("pData<-",c("imcExperiment", "DataFrame"),
-            function(object,value){
-             colData(object)<-value
-             return(object)
-             })
-
-
-
-
-#' finds the spatial coords.
-#' @name imcExperiment-class
-#'
-#' @rdname imcExperiment-class
+#' @rdname cellIntensity
 #' @param object imcExperiment
 #' @export
-setGeneric("getSpatial", 
-           function(object) standardGeneric("getSpatial"))
-#' @rdname imcExperiment-class
-#' @aliases getSpatial imcExperiment-method
+setMethod("cellIntensity", "imcExperiment",
+          function (object) return(object@cellIntensity))
+
+#' sets cell Intensity slot to a new matrix. rows protein, columns are cells.
+#' @rdname cellIntensity
+#' @param object imc container
+#' @param value matrix rows protein, column are cells
 #' @export
-setMethod("getSpatial", "imcExperiment",
-          function (object) return(object@spatial))
+setGeneric("cellIntensity<-",function(object,value) standardGeneric("cellIntensity<-"))
 
-
-
-setGeneric("getSpatial<-",function(object,value) standardGeneric("getSpatial<-"))
-
-#' @rdname imcExperiment-class
-#' @aliases spatial imcExperiment-method
+#' @rdname cellIntensity
+#' @param object IMC container
+#' @param value matrix rows protein, columns are cells
 #' @export
-setMethod("getSpatial<-",c("imcExperiment", "matrix"),
+setMethod("cellIntensity<-",c("imcExperiment", "matrix"),
+          function(object,value){
+            object@cellIntensity<-value
+            return(object)
+          })
+
+
+
+
+#' finds the spatial coords, getter.
+#' @name getCoordinates
+#'
+#' @rdname getCoordinates
+#' @param object imcExperiment
+#' @export
+setGeneric("getCoordinates",
+           function(object) standardGeneric("getCoordinates"))
+
+#' @rdname getCoordinates
+#' @param object imcExperiment
+#' @export
+setMethod("getCoordinates", "imcExperiment",
+          function (object) return(object@coordinates))
+
+#' Sets the coordinate positions of each cell (matrix), columns are X,Y positions.
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are x,y
+#' @export
+setGeneric("getCoordinates<-",function(object,value) standardGeneric("getCoordinates<-"))
+
+#' @rdname getCoordinates
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are x,y
+#' @export
+setMethod("getCoordinates<-",c("imcExperiment", "matrix"),
             function(object,value){
-             object@spatial<-value
+             object@coordinates<-value
              return(object)
              })
 
+
+#' finds the neighborhood information.
+#' @name getNeighborhood
+#'
+#' @rdname getNeighborhood
+#' @param object imcExperiment
+#' @param ... additional arguments
+#' @export
+setGeneric("getNeighborhood",
+           function(object,...) standardGeneric("getNeighborhood"))
+
+#' @rdname getNeighborhood
+#' @param object imcExperiment container
+#' @export
+setMethod("getNeighborhood", "imcExperiment",
+          function (object) return(object@neighborHood))
+
+
+#' slow assignment for the histoCAT neighborhood data (matrix) columns are the neighbors
+#' @rdname getNeighborhood
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are neighborhood histocat output
+#' @export
+setGeneric("getNeighborhood<-",function(object,value) standardGeneric("getNeighborhood<-"))
+
+#' @rdname getNeighborhood
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are neighborhood histoCAT output
+#' @export
+setMethod("getNeighborhood<-",c("imcExperiment", "matrix"),
+            function(object,value){
+             object@neighborHood<-value
+             return(object)
+             })
 
 
 
@@ -94,26 +109,103 @@ setMethod("getSpatial<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
-setGeneric("getNetwork", 
+setGeneric("getNetwork",
            function(object) standardGeneric("getNetwork"))
+#' assigns cell cluster assignment to the container. rows are cells and column is the cluster ID
 #' @rdname imcExperiment-class
+#' @param object IMC container
 #' @aliases getNetwork imcExperiment-method
 #' @export
 setMethod("getNetwork", "imcExperiment",
           function (object) return(object@network))
 
 
-
+#' re-assigns the network assignment (matrix)
+#' @param object is IMC container
+#' @param value data.frame rows cells, columns are phenograph network ID
+#' @export
 setGeneric("getNetwork<-",function(object,value) standardGeneric("getNetwork<-"))
 
 #' @rdname imcExperiment-class
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are phenotype cluster ID
 #' @aliases getNetwork imcExperiment-method
 #' @export
-setMethod("getNetwork<-",c("imcExperiment", "matrix"),
+setMethod("getNetwork<-",c("imcExperiment", "data.frame"),
             function(object,value){
              object@network<-value
              return(object)
              })
+
+
+
+
+#' finds the distance information.
+#' @name imcExperiment-class
+#'
+#' @rdname imcExperiment-class
+#' @param object imcExperiment
+#' @export
+setGeneric("getDistance",
+           function(object) standardGeneric("getDistance"))
+#'
+#' distance matrix can be stored in the distance slot for pairwise distance
+#' @rdname imcExperiment-class
+#' @aliases getDistance imcExperiment-method
+#' @export
+setMethod("getDistance", "imcExperiment",
+          function (object) return(object@distance))
+
+#' re-assigns the distance matrix (rows are cells)
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are distance measurements
+#' @export
+setGeneric("getDistance<-",function(object,value) standardGeneric("getDistance<-"))
+
+#' @rdname imcExperiment-class
+#' @aliases getDistance imcExperiment-method
+#' @export
+setMethod("getDistance<-",c("imcExperiment", "matrix"),
+            function(object,value){
+             object@distance<-value
+             return(object)
+             })
+
+
+
+#' finds the morphology information.
+#' @name imcExperiment-class
+#'
+#' @rdname imcExperiment-class
+#' @param object imcExperiment
+#' @export
+setGeneric("getMorphology",
+           function(object) standardGeneric("getMorphology"))
+#' morphological features can be stored (matrix) rows are cells and columns are Area, etc.
+#' @rdname imcExperiment-class
+#' @param object IMC container
+#' @aliases getMorphology imcExperiment-method
+#' @export
+setMethod("getMorphology", "imcExperiment",
+          function (object) return(object@morphology))
+
+#' re-assigns morphological features can be stored (matrix) rows are cells and columns are Area, etc.
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are Area, Eccentricity, etc.
+#' @export
+setGeneric("getMorphology<-",function(object,value) standardGeneric("getMorphology<-"))
+
+#' @rdname imcExperiment-class
+#' @param object is IMC container
+#' @param value matrix rows cells, columns are Area, etc.
+#' @aliases spatial imcExperiment-method
+#' @export
+setMethod("getMorphology<-",c("imcExperiment", "matrix"),
+            function(object,value){
+             object@morphology<-value
+             return(object)
+             })
+
 
 
 #' finds the label information.
@@ -124,6 +216,7 @@ setMethod("getNetwork<-",c("imcExperiment", "matrix"),
 #' @export
 setGeneric("getLabel",
            function(object) standardGeneric("getLabel"))
+#' unique cell labels can be assigned (vector)
 #' @rdname imcExperiment-class
 #' @aliases getLabel imcExperiment-method
 #' @export
@@ -132,30 +225,71 @@ setMethod("getLabel", "imcExperiment",
 
 
 
-#' subsets the imcExperiment to a case along with all slots.
-#' @name imcExperiment-class
-#'
-#' @rdname imcExperiment-class
+
+
+#' subsets the imcExperiment to a case along with all slots for a single ROI, using for distance analysis
+#' @name subsetCase
+#' @rdname subsetCase
 #' @param object imcExperiment
+#' @param value this is ROIID a single character ID
+#' @param ... additional parameters
+#' @return returns IMC object of a single case
 #' @export
 setGeneric("subsetCase",
-           function(object,value) standardGeneric("subsetCase"))
+           function(object,value,...) standardGeneric("subsetCase"))
 
-#' method to subset the slots, requires rowData with column "ROIID"
-#' @rdname imcExperiment-class
+#' method to subset the slots, requires colData with column "ROIID"
+#' @rdname subsetCase
+#' @param object IMC container
+#' @param value this is ROIID a single character ID
+#' @return roi  imcExperiment
 #' @export
 setMethod("subsetCase", "imcExperiment",
              function(object,value){
-             id<-which(rowData(object)[,"ROIID"]==value)
-             roi<-object[id,]
-             roi@spatial<-object@spatial[id,]
-             roi@cellIntensity<-object@cellIntensity[id,]
+             id<-which(colData(object)[,"ROIID"]==value)
+             roi<-object[,id]
+             roi@coordinates<-object@coordinates[id,]
+             roi@cellIntensity<-object@cellIntensity[,id]
              roi@neighborHood<-as.matrix(object@neighborHood[id,])
-             roi@network<-as.matrix(object@network[id,])
+             roi@network<-as.data.frame(object@network[id,])
+             roi@distance<-as.matrix(object@distance[id,])
+             roi@morphology<-as.matrix(object@morphology[id,])
              roi@uniqueLabel<-object@uniqueLabel[id]
              return(roi)
             })
 
+
+
+
+#' subsets the imcExperiment to a case along with all slots for a selected multiple ROIs.
+#' @name selectCases
+#'
+#' @rdname selectCases
+#' @param object imcExperiment
+#' @param value vector of ROIID
+#' @param ... additional parameters
+#' @export
+setGeneric("selectCases",
+           function(object,value,...) standardGeneric("selectCases"))
+
+#' method to subset the slots, requires colData with column "ROIID"
+#' @rdname selectCases
+#' @param object IMC container
+#' @param value this is ROIID vector
+#' @export
+setMethod("selectCases", "imcExperiment",
+          function(object,value){
+            id<-which(colData(object)[,"ROIID"]%in%value)
+            roi<-object[,id]
+            roi@coordinates<-object@coordinates[id,]
+            roi@cellIntensity<-object@cellIntensity[,id]
+            roi@neighborHood<-as.matrix(object@neighborHood[id,])
+            roi@network<-as.data.frame(object@network[id,])
+            roi@distance<-as.matrix(object@distance[id,])
+            roi@morphology<-as.matrix(object@morphology[id,])
+            roi@uniqueLabel<-object@uniqueLabel[id]
+            return(roi)
+          })
 
 
 
