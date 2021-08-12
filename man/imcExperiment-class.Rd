@@ -44,11 +44,8 @@ getLabel(object)
 }
 \arguments{
 \item{object}{imcExperiment}
-<<<<<<< HEAD
-=======
 
 \item{value}{matrix rows cells, columns are Area, etc.}
->>>>>>> devel
 }
 \description{
 a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'

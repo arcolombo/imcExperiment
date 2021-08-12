@@ -8,13 +8,6 @@ is done at run-time.  A imcExperiment must contain at least the
 expressions and spatial/coordinate assays.}
 \usage{
 imcExperiment(
-<<<<<<< HEAD
-  spatial = matrix(1, 3, 3),
-  cellIntensity = matrix(1, 3, 3),
-  neighborHood = matrix(1, 3, 3),
-  network = matrix(1, 3, 3),
-  uniqueLabel = rep("A", 3),
-=======
   coordinates = matrix(1, 3, 3),
   cellIntensity = matrix(1, 3, 3),
   neighborHood = matrix(1, 3, 3),
@@ -23,7 +16,6 @@ imcExperiment(
   morphology = matrix(1, 3, 3),
   uniqueLabel = rep("A", 3),
   panel = as.character(seq(1, 3)),
->>>>>>> devel
   ROIID = data.frame(ROIID = rep("A", 3)),
   ...
 )

@@ -85,12 +85,6 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
   x
 
 
-<<<<<<< HEAD
-### From histoCAT to R
-* The IMC container contains cellIntensity, spatial coordinates, neighborhoods, networking assignments, unique cell labeling, and ROIID.
-* each slot has an accessor, and the ROIID is used to set the rowData of your object.
-```{r}
-=======
 
  ## access the coordinates
   getCoordinates(x)
@@ -127,7 +121,6 @@ head(  getCoordinates(x))
 ### From histoCAT to R
 * We use the raw histoCAT output and containerize the data.
 ```{r,message=FALSE}
->>>>>>> devel
   ### load the data from package.
   library(imcExperiment)
  ##load the data 1000 cells from IMC experiment.
@@ -155,17 +148,6 @@ head(  getCoordinates(x))
 	coordinates=spatial,
 	neighborHood=as.matrix(data[,grepl("neighbour_",colnames(data))]),
 	network=phenotypes,
-<<<<<<< HEAD
-	uniqueLabel=uniqueLabel,
-	ROIID=NULL)
-  ### create  phenotypes via Rphenograph
-  ##run phenograph
-  require(Rphenograph)
-  phenos<-Rphenograph(cellIntensity(x),k=35)
-   pheno.labels<-as.numeric(membership(phenos[[2]]))
-   getNetwork(x)<-matrix(pheno.labels)
-  head(getNetwork(x))
-=======
 	distance=matrix(1,nrow=nrow(data),ncol=10),
 	morphology=morph,
 	panel=colnames(normExp),
@@ -233,52 +215,18 @@ library(igraph)
    pheno.labels<-as.numeric(igraph::membership(phenos[[2]]))
    getNetwork(imc)<-data.frame(cell_clustering=pheno.labels)
    head( getNetwork(imc))
->>>>>>> devel
   ##plot phenograph
   #plot_clustering_heatmap_wrapper(myExperiment=imc)
 ```
 
-<<<<<<< HEAD
- ###testing each accessor.
-  ## need to get each slot.
-  ##cell intensity
-   head(cellIntensity(x))
-   cellIntensity(x)<-cellIntensity(x)
-   all(cellIntensity(x)==normExp)
-    all(assays(x)$exprs==cellIntensity(x))
-   
-   ##spatial coordinates
-   head(getSpatial(x))
-    getSpatial(x)<-spatial
-     all(getSpatial(x)==spatial)
-   ##
-     
-     ##neighborhood cell assignments.
-      head(getNetwork(x))
-      all(getNetwork(x)==as.matrix(pheno.labels))
-      
-      ##uniqueLabels
-      head(getLabel(x))
-      all(getLabel(x)==uniqueLabel)
-      
-      
 
-      
 
-```  
-
-### Read in histoCat data into R
-* read in histoCat data for customized analysis.
-=======
 ### histoCAT analysis
 * raw input from histoCAT and creating an IMC container.
 * containerizes the intensities, neighborhood results, morphology, and computes nearest distances and stores it.
 * Can use a hyperframe to identify distances quickly.
 ```{r,fig.width=11,fig.height=11}
- ###
->>>>>>> devel
 
-```{r}
 ### reading in a directory of histoCAT csv files.
 
  ##need to reconstruct the fold revised IMC data.
@@ -333,22 +281,12 @@ library(igraph)
    x
    
    
-  ##phenotype
-  ##run phenograph
-<<<<<<< HEAD
-  require(Rphenograph)
-  phenos<-Rphenograph(cellIntensity(x),k=35)
-   pheno.labels<-as.numeric(membership(phenos[[2]]))
-   getNetwork(x)<-matrix(pheno.labels)
-   head( getNetwork(x))
-=======
-  #require(Rphenograph); library(igraph)
+   #require(Rphenograph); library(igraph)
   #phenos<-Rphenograph(t(cellIntensity(x)),k=35)
   # pheno.labels<-as.numeric(membership(phenos[[2]]))
   # getNetwork(x)<-data.frame(cell_clustering=pheno.labels)
   #  head(getNetwork(x))
->>>>>>> devel
-  ##plot phenograph
+ ##plot phenograph
   #plot_clustering_heatmap_wrapper(myExperiment=x)
 ```
 
@@ -359,9 +297,7 @@ library(igraph)
 ```{r}
  ##store the ROIID in the metadata columns.
   ##access the unique cell labels.
-<<<<<<< HEAD
- head( getLabel(x))
-=======
+
   tail(getLabel(x))
   
   roi<-subsetCase(x,372149 )
@@ -375,8 +311,7 @@ library(igraph)
 
 ```{r}
 
->>>>>>> devel
-  
+
   ##you can append more clinical features to the columns of the sampleDat data.frame.
   H<-imcExperimentToHyperFrame(imcExperiment=x,phenotypeToUse = 1)
   helper<-function(pp=NULL,i=NULL,j=NULL){
@@ -530,7 +465,6 @@ cluster<-rowData(dse)
 
 ```
 
-
 ### Diffcyt package tutorial (extra)
 * Given a flowSet object we can utilize the diffCyt package for measuring phenotype differences.
 * This code section is an example of diffcyt from their manual.
@@ -543,7 +477,6 @@ d_random <- function(n = 20000, mean = 0, sd = 1, ncol = 20, cofactor = 5) {
   colnames(d) <- paste0("marker", sprintf("%02d", 1:ncol))
   d
 }
-
 # Create random data (without differential signal)
 set.seed(123)
 d_input <- list(
@@ -552,13 +485,11 @@ d_input <- list(
   sample3 = d_random(), 
   sample4 = d_random()
 )
-
 experiment_info <- data.frame(
   sample_id = factor(paste0("sample", 1:4)), 
   group_id = factor(c("group1", "group1", "group2", "group2")), 
   stringsAsFactors = FALSE
 )
-
 marker_info <- data.frame(
   channel_name = paste0("channel", sprintf("%03d", 1:20)), 
   marker_name = paste0("marker", sprintf("%02d", 1:20)), 
@@ -566,19 +497,10 @@ marker_info <- data.frame(
                         levels = c("type", "state", "none")), 
   stringsAsFactors = FALSE
 )
-
 # Prepare data
 d_se <- prepareData(d_input, experiment_info, marker_info)
-
 # Transform data
 d_se <- transformData(d_se)
-
 # Generate clusters
 d_se <- generateClusters(d_se)
-
-
-
 ```
-
-
-
