@@ -1,7 +1,7 @@
 #' map to point pattern from imcExperiment class.
 #' @param imcExperiment  imcExperiment class
 #' @param phenotypeToUse the network slot can often have many columns, this is the ID for the column number to use in the network slot.
-#' @importFrom spatstat ppp hyperframe unitname coords
+#' @importFrom spatstat.geom hyperframe coords ppp unitname
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @export
 imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
@@ -29,7 +29,7 @@ imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
 #' map to point pattern from imcExperiment class.
 #' @param caseExperiment the subset IMC experiment to cast into a point pattern
 #' @param phenotypeToUse the cluster id to annotate the pattern
-#' @importFrom spatstat ppp hyperframe unitname<-
+#' @importFrom spatstat.geom hyperframe coords ppp unitname unitname<-
 .imcExperimentToPPP<-function(caseExperiment=NULL,phenotypeToUse=1){
  ### for an imcExperiment for 1 case, creates a point pattern.
   casePositions<-getCoordinates(caseExperiment)
