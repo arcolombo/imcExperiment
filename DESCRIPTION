@@ -1,17 +1,18 @@
 Package: imcExperiment
 Title: Containerizes Cytometry Data
-Version: 0.0.0.9000
+Version: 0.99.0
 Authors@R: person("Anthony", "Colombo", email = "anthonycolombo60@gmail.com", role="cre")
 Description: containerizes cytometry data and allows for S4 class structure.
-Depends: R (>= 3.6.0),
+Depends: R (>= 4.1),
 	SingleCellExperiment,
 	methods
 Imports: SummarizedExperiment,
           S4Vectors,
-          spatstat.geom
+          spatstat.geom,
+          stats
 Suggests: knitr, rmarkdown
 License: MIT + file LICENSE
+biocViews: Software
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

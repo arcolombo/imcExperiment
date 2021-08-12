@@ -39,7 +39,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 	network=data.frame(matrix(1,nrow=10,ncol=10)),
 	distance=matrix(1,nrow=10,ncol=10),
 	morphology=matrix(1,nrow=10,ncol=10),
-	uniqueLabel=paste0("A",seq(1,10)),
+	uniqueLabel=paste0("A",seq_len(10)),
 	panel=letters[1:10],
 	ROIID=data.frame(ROIID=rep("A",10)))
   
@@ -191,7 +191,9 @@ head(  getCoordinates(x))
 
  ### inherited accessor.
   pca_data <- prcomp(t(counts(x)), rank=50)
-  reducedDims(x) <- list(PCA=pca_data$x, TSNE=data.frame(tsne.x=data$tSNE4148542692_1,tsne.y=data$tSNE4148542692_2))
+tsDat<-data.frame(tsne.x=data$tSNE4148542692_1,tsne.y=data$tSNE4148542692_2,row.names=colnames(x))
+
+  reducedDims(x,withDimnames=TRUE) <- list(PCA=pca_data$x, TSNE=tsDat)
    x
      dim(reducedDims(x)$PCA)
      dim(reducedDims(x)$TSNE)
@@ -353,7 +355,7 @@ library(diffcyt)
 
  ## change into a daFrame (CATALYST)
 
- data("imcData")
+ #data("data")
 
  
  rd<-DataFrame(colData(imcData))

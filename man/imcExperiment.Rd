@@ -15,7 +15,7 @@ imcExperiment(
   distance = matrix(1, 3, 3),
   morphology = matrix(1, 3, 3),
   uniqueLabel = rep("A", 3),
-  panel = as.character(seq(1, 3)),
+  panel = as.character(seq_len(3)),
   ROIID = data.frame(ROIID = rep("A", 3)),
   ...
 )

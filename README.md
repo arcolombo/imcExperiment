@@ -1,19 +1,15 @@
-<<<<<<< HEAD
-# imcExperiment
- new project
-=======
 # imcExperiment data container
 Containerizing IMC data into the SummarizedExperiment class, this container inherits packages from FlowSOM and diffcyt to compute clusters and test for differential abundance or state heterogeneity.
    Creating a flowSet is cumbersome, so we can stream-line into a summarized experiment into a quick and fast way to detect changes in cell populations.
 
-``` r
-
+```{r}
 
  library(CATALYST)
  library(diffcyt)
  library(imcExperiment)
- data(imcData)
- head(rownames(imcData))
+ data(imcdata)
+ head(rownames(imcdata))
+ imcData<-imcdata
     # for plot scatter to work need to set the rowData feature in a specific way.
     channel<-sapply(strsplit(rownames(imcData),"_"),function(x) x[3])
     channel[34:35]<-c("Ir1911","Ir1931")
@@ -73,4 +69,3 @@ Containerizing IMC data into the SummarizedExperiment class, this container inhe
       topTable(out_DS,format_vals = TRUE)
 ```
       
->>>>>>> devel
