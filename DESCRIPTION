@@ -1,7 +1,7 @@
 Package: imcExperiment
 Title: Containerizes IMC data and pipes to CyTOF libraries
 Version: 0.0.0.9000
-Authors@R: person("Anthony", "Colombo", email = "anthony.colombo60@gmail.com", role="cre")
+Authors@R: person("Anthony", "Colombo", email = "anthonycolombo60@gmail.com", role="cre")
 Description: containerizes cytometry data and allows for S4 class structure.
 Depends: R (>= 3.6.0),
 	SingleCellExperiment,
