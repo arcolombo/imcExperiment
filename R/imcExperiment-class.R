@@ -1,22 +1,12 @@
 #' a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'
-#' @slot coordinates   Spatial coordinate (rows are cells and columns are x,y coordinates.
-#' @slot cellIntensity a matrix of the intensity values rows are proteins and columns are cells (SCE format)
-#' @slot neighborHood  a matrix (rows are cells, columns are features) of neighborhood observations from neighborhood analysis
-#' @slot network      a matrix (rows are cells) and columns are for network assignment information
-#' @slot distance a matrix of rows are cells and columns are for distance measurements
-#' @slot morphology matrix of morphological features
-#' @slot uniqueLabel a character for each cell for unique labeling.
+#' @slot coordinates matrix class containing x,y coordinates
+#' @slot cellIntensity matrix class containing intensity
+#' @slot neighborHood matrix class containing x,y neighbor
+#' @slot network data frame class containing network
+#' @slot distance matrix class containing x,y distances
+#' @slot morphology matrix class containing morphology
+#' @slot uniqueLabel labels
 #' @name imcExperiment-class
-#' @section Slots:
-#' \describe{
-#'   \item{\code{coordinates}:}{matrix class containing x,y coordinates}
-#'   \item{\code{cellIntensity}:}{matrix class containing intensities}
-#'   \item{\code{neighborHood}:}{matrix class containing neighborhood results}
-#'   \item{\code{network}:}{data.frame class containing cell assignment cluster}
-#'   \item{\code{distance}:}{matrix class containing cell distance observations}
-#'   \item{\code{morphology}{matrix contraing Area, Eccentricity, etc.}
-#'   \item{\code{uniqueLabel}:}{character class containing labels}
-#' }
 #' @rdname imcExperiment-class
 #' @export
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
@@ -30,13 +20,10 @@
 				uniqueLabel="character"),
 	contains="SingleCellExperiment")
 
-
+#' the rows are the panel names, the columns are the single cells,the column are the single cells to match the SCE designs (scRNA)
+#' @param object imcExperiment object, class imcExperiment container
 #' @export
 #' @importFrom SingleCellExperiment SingleCellExperiment
-
- # the rows are the panel names
- # the columns are the single cells
- # the column are the single cells to match the SCE designs (scRNA)
 .checkSpatialDimension<-function(object){
    nspatial<-nrow(object@coordinates)
    ndistance<-nrow(object@distance)

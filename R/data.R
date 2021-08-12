@@ -16,7 +16,6 @@
 #'   \item{Cell_CD4Gd156Di_Gd156}{feature from histoCAT}
 #'   \item{Cell_CD68Tb159Di_Tb159}{feature from histoCAT}
 #'   \item{Cell_CD8Dy162Di_Dy162}{feature from histoCAT}
-
 #'   \item{Cell_CXCR3Nd142Di_Nd142}{feature from histoCAT}
 #'   \item{Cell_CXCR5Yb171Di_Yb171}{feature from histoCAT}
 #'   \item{Cell_DNA2Ir191Di_Ir191}{feature from histoCAT}

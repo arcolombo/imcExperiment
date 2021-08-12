@@ -1,10 +1,10 @@
 #' given a  matrix of intensity counts, perform min/max norm.
-#' 
-#' @param data    matrix of numeric data only
-#' @param percentile    numeric value 0.99 default.
 #'
-#' @return              normalized data, each column on [0,1] scale.
-#' 
+#' @param data matrix of numeric data only
+#' @param percentile    numeric value 0.99 default.
+#' @importFrom stats quantile
+#' @return normalized data, each column on [0,1] scale.
+#'
 #' @export
 percentilenormalize<-function(data=NULL,percentile=NULL){
    if(percentile>1){
@@ -12,7 +12,7 @@ percentilenormalize<-function(data=NULL,percentile=NULL){
    }
     if(is.null(percentile)==TRUE){
     minValues<-apply(data,2,min)
-    maxValues<-apply(data,2,max) 
+    maxValues<-apply(data,2,max)
    }else{
     minValues<-apply(data,2,function(x) quantile(x,1-percentile)  )
     maxValues<-apply(data,2,function(x) quantile(x,percentile)  )

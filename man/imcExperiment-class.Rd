@@ -69,22 +69,18 @@ unique cell labels can be assigned (vector)
 \section{Slots}{
 
 \describe{
-\item{\code{coordinates}}{Spatial coordinate (rows are cells and columns are x,y coordinates.}
+\item{\code{coordinates}}{matrix class containing x,y coordinates}
 
-\item{\code{cellIntensity}}{a matrix of the intensity values rows are proteins and columns are cells (SCE format)}
+\item{\code{cellIntensity}}{matrix class containing intensity}
 
-\item{\code{neighborHood}}{a matrix (rows are cells, columns are features) of neighborhood observations from neighborhood analysis}
+\item{\code{neighborHood}}{matrix class containing x,y neighbor}
 
-\item{\code{network}}{a matrix (rows are cells) and columns are for network assignment information}
+\item{\code{network}}{data frame class containing network}
 
-\item{\code{distance}}{a matrix of rows are cells and columns are for distance measurements}
+\item{\code{distance}}{matrix class containing x,y distances}
 
-\item{\code{morphology}}{matrix of morphological features}
+\item{\code{morphology}}{matrix class containing morphology}
 
-\item{\code{uniqueLabel}}{a character for each cell for unique labeling.}
+\item{\code{uniqueLabel}}{labels}
 }}
-
-\section{}{
-NA
-}
 

@@ -14,6 +14,11 @@
 #' @param panel antibody panel rownames set to rowData
 #' @param ROIID	character for ROI
 #' @param ... additional arguments
+#' @importClassesFrom SingleCellExperiment SingleCellExperiment
+#' @importFrom methods is new
+#' @importFrom SingleCellExperiment colData
+#' @importFrom SummarizedExperiment colData<-
+#' @importFrom S4Vectors DataFrame
 #' @export
 imcExperiment<-function(
         coordinates=matrix(1,3,3),

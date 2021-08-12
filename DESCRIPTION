@@ -4,10 +4,11 @@ Version: 0.0.0.9000
 Authors@R: person("Anthony", "Colombo", email = "anthony.colombo60@gmail.com", role="cre")
 Description: containerizes IMC data and allows for S4 class structure.
 Depends: R (>= 3.6.0),
-	SummarizedExperiment,
 	SingleCellExperiment,
-	tools,
-	spatstat
+	spatstat,
+	methods
+Imports: SummarizedExperiment,
+          S4Vectors
 Suggests: knitr, rmarkdown
 License: MIT + file LICENSE
 Encoding: UTF-8
