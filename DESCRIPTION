@@ -2,7 +2,7 @@ Package: imcExperiment
 Title: Containerizes Cytometry Data, Analysis Workflow and Hypothesis Testing
 Version: 0.99.0
 Authors@R: person("Anthony", "Colombo", email = "anthonycolombo60@gmail.com", role="cre")
-Description: containerizes cytometry data and allows for S4 class structure.
+Description: Containerizes cytometry data and allows for S4 class structure to extend slots related to cell morphology, coordinates, phenotype network information, and unique cellular labeling.
 Depends: R (>= 4.1),
 	SingleCellExperiment,
 	methods
