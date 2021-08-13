@@ -20,3 +20,12 @@ getCoordinates(object)
 \description{
 finds the spatial coords, getter.
 }
+\examples{
+data(imcdata)
+getCoordinates(imcdata)
+data(imcdata)
+getCoordinates(imcdata)
+data(imcdata)
+x<-getCoordinates(imcdata)
+getCoordinates(imcdata)<-as.matrix(x)
+}

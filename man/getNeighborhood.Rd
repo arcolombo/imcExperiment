@@ -27,3 +27,13 @@ finds the neighborhood information.
 
 slow assignment for the histoCAT neighborhood data (matrix) columns are the neighbors
 }
+\examples{
+data(imcdata)
+getNeighborhood(imcdata)
+data(imcdata)
+x<-matrix(1,nrow=ncol(imcdata),ncol=2)
+getNeighborhood(imcdata)<-x
+data(imcdata)
+x<-matrix(1,nrow=ncol(imcdata),ncol=2)
+getNeighborhood(imcdata)<-x
+}

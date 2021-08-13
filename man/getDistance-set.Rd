@@ -14,3 +14,8 @@ getDistance(object) <- value
 \description{
 re-assigns the distance matrix (rows are cells)
 }
+\examples{
+data(imcdata)
+newD<-matrix(1,nrow=ncol(imcdata),ncol=1)
+getDistance(imcdata)<-newD
+}

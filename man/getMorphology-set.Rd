@@ -14,3 +14,8 @@ getMorphology(object) <- value
 \description{
 re-assigns morphological features can be stored (matrix) rows are cells and columns are Area, etc.
 }
+\examples{
+data(imcdata)
+x<-matrix(1,nrow=ncol(imcdata),ncol=4)
+getMorphology(imcdata)<-x
+}

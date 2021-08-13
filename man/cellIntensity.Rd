@@ -27,3 +27,12 @@ finds the intensities getter.
 
 sets cell Intensity slot to a new matrix. rows protein, columns are cells.
 }
+\examples{
+data(imcdata)
+dim(cellIntensity(imcdata))
+data(imcdata);dim(cellIntensity(imcdata))
+head(t(cellIntensity(imcdata)))
+data(imcdata)
+x<-asinh(counts(imcdata))
+cellIntensity(imcdata)<-x
+}

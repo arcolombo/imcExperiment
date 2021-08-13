@@ -26,3 +26,11 @@ subsets the imcExperiment to a case along with all slots for a single ROI, using
 
 method to subset the slots, requires colData with column "ROIID"
 }
+\examples{
+data(imcdata)
+myCase<-subsetCase(imcdata,"30-BM16-202_7Pre_s1_p1_r4_a4_ac")
+myCase
+data(imcdata)
+myCase<-subsetCase(imcdata,"30-BM16-202_7Pre_s1_p1_r4_a4_ac")
+myCase
+}

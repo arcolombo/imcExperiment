@@ -1,9 +1,12 @@
 #' map to point pattern from imcExperiment class.
 #' @param imcExperiment  imcExperiment class
 #' @param phenotypeToUse the network slot can often have many columns, this is the ID for the column number to use in the network slot.
-#' @importFrom spatstat.geom hyperframe coords ppp unitname
+#' @importFrom spatstat.geom hyperframe coords ppp unitname nncross
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' H<-imcExperimentToHyperFrame(imcExperiment=imcdata,phenotypeToUse = 1)
 imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
    #suppressPackageStartupMessages( require(spatstat))
    ##returns the PPP object, with marks as the original data frame.

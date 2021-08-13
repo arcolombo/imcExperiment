@@ -21,3 +21,13 @@ subsets the imcExperiment to a case along with all slots for a selected multiple
 
 method to subset the slots, requires colData with column "ROIID"
 }
+\examples{
+data(imcdata)
+myCases<-selectCases(imcdata,c("30-BM16-202_7Pre_s1_p1_r4_a4_ac","B17_350_14post_s1_p1_r5_a5_ac"))
+myCases
+table(colData(myCases)$ROIID)
+data(imcdata)
+myCases<-selectCases(imcdata,c("30-BM16-202_7Pre_s1_p1_r4_a4_ac","B17_350_14post_s1_p1_r5_a5_ac"))
+myCases
+table(colData(myCases)$ROIID)
+}

@@ -5,7 +5,7 @@
 \alias{imcdata}
 \title{imcdata}
 \format{
-A data frame of 2,452 cells and histoCAT features
+A data frame of 2,452 cells and histoCAT features which are containerized into the imcExperiment
 }
 \usage{
 data(imcdata)

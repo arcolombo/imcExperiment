@@ -10,6 +10,17 @@
 #' @rdname imcExperiment-class
 #' @export
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
+#' @examples
+#' x<-imcExperiment(cellIntensity=matrix(1,nrow=10,ncol=10),
+#' coordinates=matrix(1,nrow=10,ncol=2),
+#' neighborHood=matrix(1,nrow=10,ncol=10),
+#' network=data.frame(matrix(1,nrow=10,ncol=10)),
+#' distance=matrix(1,nrow=10,ncol=10),
+#' morphology=matrix(1,nrow=10,ncol=10),
+#' uniqueLabel=paste0("A",seq_len(10)),
+#' panel=letters[1:10],
+#' ROIID=data.frame(ROIID=rep("A",10)))
+
 .imcExperiment<-setClass("imcExperiment",
 	slots=representation(coordinates="matrix",
 				cellIntensity="matrix",

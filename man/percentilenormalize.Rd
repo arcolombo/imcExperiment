@@ -17,3 +17,10 @@ normalized data, each column on [0,1] scale.
 \description{
 given a  matrix of intensity counts, perform min/max norm.
 }
+\examples{
+ data(data)
+ dim(data)
+ expr<-data[,3:36]
+ normExp<-percentilenormalize(data=expr,percentile=0.99)
+ normExp<-as.matrix(normExp)
+}

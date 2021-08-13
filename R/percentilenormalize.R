@@ -6,6 +6,12 @@
 #' @return normalized data, each column on [0,1] scale.
 #'
 #' @export
+#' @examples
+#'  data(data)
+#'  dim(data)
+#'  expr<-data[,3:36]
+#'  normExp<-percentilenormalize(data=expr,percentile=0.99)
+#'  normExp<-as.matrix(normExp)
 percentilenormalize<-function(data=NULL,percentile=NULL){
    if(percentile>1){
      percentile<-percentile/100

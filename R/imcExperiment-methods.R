@@ -6,12 +6,18 @@
 #' @param object imcExperiment
 #' @param ... additional arguments
 #' @export
+#' @examples
+#' data(imcdata)
+#' dim(cellIntensity(imcdata))
 setGeneric("cellIntensity",
            function(object,...) standardGeneric("cellIntensity"))
 
 #' @rdname cellIntensity
 #' @param object imcExperiment
 #' @export
+#' @examples
+#' data(imcdata);dim(cellIntensity(imcdata))
+#' head(t(cellIntensity(imcdata)))
 setMethod("cellIntensity", "imcExperiment",
           function (object) return(object@cellIntensity))
 
@@ -26,6 +32,10 @@ setGeneric("cellIntensity<-",function(object,value) standardGeneric("cellIntensi
 #' @param object IMC container
 #' @param value matrix rows protein, columns are cells
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-asinh(counts(imcdata))
+#' cellIntensity(imcdata)<-x
 setMethod("cellIntensity<-",c("imcExperiment", "matrix"),
           function(object,value){
             object@cellIntensity<-value
@@ -41,12 +51,18 @@ setMethod("cellIntensity<-",c("imcExperiment", "matrix"),
 #' @rdname getCoordinates
 #' @param object imcExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' getCoordinates(imcdata)
 setGeneric("getCoordinates",
            function(object) standardGeneric("getCoordinates"))
 
 #' @rdname getCoordinates
 #' @param object imcExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' getCoordinates(imcdata)
 setMethod("getCoordinates", "imcExperiment",
           function (object) return(object@coordinates))
 
@@ -54,12 +70,20 @@ setMethod("getCoordinates", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are x,y
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-getCoordinates(imcdata)
+#' getCoordinates(imcdata)<-as.matrix(x)
 setGeneric("getCoordinates<-",function(object,value) standardGeneric("getCoordinates<-"))
 
 #' @rdname getCoordinates
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are x,y
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-getCoordinates(imcdata)
+#' getCoordinates(imcdata)<-as.matrix(x)
 setMethod("getCoordinates<-",c("imcExperiment", "matrix"),
             function(object,value){
              object@coordinates<-value
@@ -74,12 +98,17 @@ setMethod("getCoordinates<-",c("imcExperiment", "matrix"),
 #' @param object imcExperiment
 #' @param ... additional arguments
 #' @export
+#' @examples
+#' data(imcdata)
+#' getNeighborhood(imcdata)
 setGeneric("getNeighborhood",
            function(object,...) standardGeneric("getNeighborhood"))
 
 #' @rdname getNeighborhood
 #' @param object imcExperiment container
 #' @export
+#' data(imcdata)
+#' getNeighborhood(imcdata)
 setMethod("getNeighborhood", "imcExperiment",
           function (object) return(object@neighborHood))
 
@@ -89,12 +118,20 @@ setMethod("getNeighborhood", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are neighborhood histocat output
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-matrix(1,nrow=ncol(imcdata),ncol=2)
+#' getNeighborhood(imcdata)<-x
 setGeneric("getNeighborhood<-",function(object,value) standardGeneric("getNeighborhood<-"))
 
 #' @rdname getNeighborhood
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are neighborhood histoCAT output
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-matrix(1,nrow=ncol(imcdata),ncol=2)
+#' getNeighborhood(imcdata)<-x
 setMethod("getNeighborhood<-",c("imcExperiment", "matrix"),
             function(object,value){
              object@neighborHood<-value
@@ -109,6 +146,9 @@ setMethod("getNeighborhood<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' getNetwork(imcdata)
 setGeneric("getNetwork",
            function(object) standardGeneric("getNetwork"))
 #' assigns cell cluster assignment to the container. rows are cells and column is the cluster ID
@@ -116,6 +156,9 @@ setGeneric("getNetwork",
 #' @param object IMC container
 #' @aliases getNetwork imcExperiment-method
 #' @export
+#' @examples
+#' data(imcdata)
+#' getNetwork(imcdata)
 setMethod("getNetwork", "imcExperiment",
           function (object) return(object@network))
 
@@ -124,6 +167,10 @@ setMethod("getNetwork", "imcExperiment",
 #' @param object is IMC container
 #' @param value data.frame rows cells, columns are phenograph network ID
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-data.frame(ID=seq_len(ncol(imcdata)))
+#' getNetwork(imcdata)<-x
 setGeneric("getNetwork<-",function(object,value) standardGeneric("getNetwork<-"))
 
 #' @rdname imcExperiment-class
@@ -131,6 +178,10 @@ setGeneric("getNetwork<-",function(object,value) standardGeneric("getNetwork<-")
 #' @param value matrix rows cells, columns are phenotype cluster ID
 #' @aliases getNetwork imcExperiment-method
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-data.frame(ID=seq_len(ncol(imcdata)))
+#' getNetwork(imcdata)<-x
 setMethod("getNetwork<-",c("imcExperiment", "data.frame"),
             function(object,value){
              object@network<-value
@@ -146,6 +197,9 @@ setMethod("getNetwork<-",c("imcExperiment", "data.frame"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' getDistance(imcdata)
 setGeneric("getDistance",
            function(object) standardGeneric("getDistance"))
 #'
@@ -153,6 +207,9 @@ setGeneric("getDistance",
 #' @rdname imcExperiment-class
 #' @aliases getDistance imcExperiment-method
 #' @export
+#' @examples
+#' data(imcdata)
+#' getDistance(imcdata)
 setMethod("getDistance", "imcExperiment",
           function (object) return(object@distance))
 
@@ -160,11 +217,19 @@ setMethod("getDistance", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are distance measurements
 #' @export
+#' @examples
+#' data(imcdata)
+#' newD<-matrix(1,nrow=ncol(imcdata),ncol=1)
+#' getDistance(imcdata)<-newD
 setGeneric("getDistance<-",function(object,value) standardGeneric("getDistance<-"))
 
 #' @rdname imcExperiment-class
 #' @aliases getDistance imcExperiment-method
 #' @export
+#' @examples
+#' data(imcdata)
+#' newD<-matrix(1,nrow=ncol(imcdata),ncol=1)
+#' getDistance(imcdata)<-newD
 setMethod("getDistance<-",c("imcExperiment", "matrix"),
             function(object,value){
              object@distance<-value
@@ -179,6 +244,9 @@ setMethod("getDistance<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' getMorphology(imcdata)
 setGeneric("getMorphology",
            function(object) standardGeneric("getMorphology"))
 #' morphological features can be stored (matrix) rows are cells and columns are Area, etc.
@@ -186,6 +254,9 @@ setGeneric("getMorphology",
 #' @param object IMC container
 #' @aliases getMorphology imcExperiment-method
 #' @export
+#' @examples
+#' data(imcdata)
+#' getMorphology(imcdata)
 setMethod("getMorphology", "imcExperiment",
           function (object) return(object@morphology))
 
@@ -193,6 +264,10 @@ setMethod("getMorphology", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are Area, Eccentricity, etc.
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-matrix(1,nrow=ncol(imcdata),ncol=4)
+#' getMorphology(imcdata)<-x
 setGeneric("getMorphology<-",function(object,value) standardGeneric("getMorphology<-"))
 
 #' @rdname imcExperiment-class
@@ -200,6 +275,10 @@ setGeneric("getMorphology<-",function(object,value) standardGeneric("getMorpholo
 #' @param value matrix rows cells, columns are Area, etc.
 #' @aliases spatial imcExperiment-method
 #' @export
+#' @examples
+#' data(imcdata)
+#' x<-matrix(1,nrow=ncol(imcdata),ncol=4)
+#' getMorphology(imcdata)<-x
 setMethod("getMorphology<-",c("imcExperiment", "matrix"),
             function(object,value){
              object@morphology<-value
@@ -214,12 +293,18 @@ setMethod("getMorphology<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' getLabel(imcdata)
 setGeneric("getLabel",
            function(object) standardGeneric("getLabel"))
 #' unique cell labels can be assigned (vector)
 #' @rdname imcExperiment-class
 #' @aliases getLabel imcExperiment-method
 #' @export
+#' @examples
+#' data(imcdata)
+#' getLabel(imcdata)
 setMethod("getLabel", "imcExperiment",
           function (object) return(object@uniqueLabel))
 
@@ -235,6 +320,10 @@ setMethod("getLabel", "imcExperiment",
 #' @param ... additional parameters
 #' @return returns IMC object of a single case
 #' @export
+#' @examples
+#' data(imcdata)
+#' myCase<-subsetCase(imcdata,"30-BM16-202_7Pre_s1_p1_r4_a4_ac")
+#' myCase
 setGeneric("subsetCase",
            function(object,value,...) standardGeneric("subsetCase"))
 
@@ -244,6 +333,10 @@ setGeneric("subsetCase",
 #' @param value this is ROIID a single character ID
 #' @return roi  imcExperiment
 #' @export
+#' @examples
+#' data(imcdata)
+#' myCase<-subsetCase(imcdata,"30-BM16-202_7Pre_s1_p1_r4_a4_ac")
+#' myCase
 setMethod("subsetCase", "imcExperiment",
              function(object,value){
              id<-which(colData(object)[,"ROIID"]==value)
@@ -269,6 +362,11 @@ setMethod("subsetCase", "imcExperiment",
 #' @param value vector of ROIID
 #' @param ... additional parameters
 #' @export
+#' @examples
+#' data(imcdata)
+#' myCases<-selectCases(imcdata,c("30-BM16-202_7Pre_s1_p1_r4_a4_ac","B17_350_14post_s1_p1_r5_a5_ac"))
+#' myCases
+#' table(colData(myCases)$ROIID)
 setGeneric("selectCases",
            function(object,value,...) standardGeneric("selectCases"))
 
@@ -277,6 +375,11 @@ setGeneric("selectCases",
 #' @param object IMC container
 #' @param value this is ROIID vector
 #' @export
+#' @examples
+#' data(imcdata)
+#' myCases<-selectCases(imcdata,c("30-BM16-202_7Pre_s1_p1_r4_a4_ac","B17_350_14post_s1_p1_r5_a5_ac"))
+#' myCases
+#' table(colData(myCases)$ROIID)
 setMethod("selectCases", "imcExperiment",
           function(object,value){
             id<-which(colData(object)[,"ROIID"]%in%value)

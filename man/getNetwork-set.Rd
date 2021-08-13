@@ -14,3 +14,8 @@ getNetwork(object) <- value
 \description{
 re-assigns the network assignment (matrix)
 }
+\examples{
+data(imcdata)
+x<-data.frame(ID=seq_len(ncol(imcdata)))
+getNetwork(imcdata)<-x
+}

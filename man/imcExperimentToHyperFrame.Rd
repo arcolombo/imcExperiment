@@ -14,3 +14,7 @@ imcExperimentToHyperFrame(imcExperiment = NULL, phenotypeToUse = 1)
 \description{
 map to point pattern from imcExperiment class.
 }
+\examples{
+data(imcdata)
+H<-imcExperimentToHyperFrame(imcExperiment=imcdata,phenotypeToUse = 1)
+}

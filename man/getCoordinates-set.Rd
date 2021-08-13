@@ -14,3 +14,8 @@ getCoordinates(object) <- value
 \description{
 Sets the coordinate positions of each cell (matrix), columns are X,Y positions.
 }
+\examples{
+data(imcdata)
+x<-getCoordinates(imcdata)
+getCoordinates(imcdata)<-as.matrix(x)
+}

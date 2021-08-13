@@ -1,5 +1,5 @@
 Package: imcExperiment
-Title: Containerizes Cytometry Data
+Title: Containerizes Cytometry Data, Analysis Workflow and Hypothesis Testing
 Version: 0.99.0
 Authors@R: person("Anthony", "Colombo", email = "anthonycolombo60@gmail.com", role="cre")
 Description: containerizes cytometry data and allows for S4 class structure.
@@ -12,7 +12,7 @@ Imports: SummarizedExperiment,
           stats
 Suggests: knitr, rmarkdown
 License: MIT + file LICENSE
-biocViews: Software
+biocViews: Software, WorkflowStep, MultipleComparison
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
