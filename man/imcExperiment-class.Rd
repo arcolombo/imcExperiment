@@ -47,6 +47,29 @@ getLabel(object)
 
 \item{value}{matrix rows cells, columns are Area, etc.}
 }
+\value{
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+}
 \description{
 a summarized experiment of IMC runs, dimensions of the spatial and intensity data are regulated.#'
 

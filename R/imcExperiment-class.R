@@ -8,6 +8,7 @@
 #' @slot uniqueLabel labels
 #' @name imcExperiment-class
 #' @rdname imcExperiment-class
+#' @return imcExperiment container
 #' @export
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @examples
@@ -34,6 +35,7 @@
 #' the rows are the panel names, the columns are the single cells,the column are the single cells to match the SCE designs (scRNA)
 #' @param object imcExperiment object, class imcExperiment container
 #' @export
+#' @return imcExperiment container that has proper dimensions
 #' @importFrom SingleCellExperiment SingleCellExperiment
 .checkSpatialDimension<-function(object){
    nspatial<-nrow(object@coordinates)

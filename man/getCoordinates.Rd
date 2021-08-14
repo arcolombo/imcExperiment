@@ -17,6 +17,13 @@ getCoordinates(object)
 
 \item{value}{matrix rows cells, columns are x,y}
 }
+\value{
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+}
 \description{
 finds the spatial coords, getter.
 }

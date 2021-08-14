@@ -22,6 +22,15 @@ cellIntensity(object) <- value
 
 \item{value}{matrix rows protein, columns are cells}
 }
+\value{
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+
+imcExperiment container
+}
 \description{
 finds the intensities getter.
 

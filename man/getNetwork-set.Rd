@@ -11,6 +11,9 @@ getNetwork(object) <- value
 
 \item{value}{data.frame rows cells, columns are phenograph network ID}
 }
+\value{
+imcExperiment container
+}
 \description{
 re-assigns the network assignment (matrix)
 }

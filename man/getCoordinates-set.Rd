@@ -11,6 +11,9 @@ getCoordinates(object) <- value
 
 \item{value}{matrix rows cells, columns are x,y}
 }
+\value{
+imcExperiment container
+}
 \description{
 Sets the coordinate positions of each cell (matrix), columns are X,Y positions.
 }

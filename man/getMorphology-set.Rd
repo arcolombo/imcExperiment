@@ -11,6 +11,9 @@ getMorphology(object) <- value
 
 \item{value}{matrix rows cells, columns are Area, Eccentricity, etc.}
 }
+\value{
+imcExperiment container
+}
 \description{
 re-assigns morphological features can be stored (matrix) rows are cells and columns are Area, etc.
 }

@@ -11,6 +11,9 @@ imcExperimentToHyperFrame(imcExperiment = NULL, phenotypeToUse = 1)
 
 \item{phenotypeToUse}{the network slot can often have many columns, this is the ID for the column number to use in the network slot.}
 }
+\value{
+a hyperframe of point patterns
+}
 \description{
 map to point pattern from imcExperiment class.
 }

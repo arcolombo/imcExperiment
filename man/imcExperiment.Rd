@@ -41,6 +41,9 @@ imcExperiment(
 
 \item{...}{additional arguments}
 }
+\value{
+imcExperiment container
+}
 \description{
 Initializes a imcExperiment and performs some rudimentary checks.
 Many of the arguments CAN be NULL; determination of which is required

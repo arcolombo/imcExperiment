@@ -20,6 +20,7 @@
 #' @importFrom SummarizedExperiment colData<-
 #' @importFrom S4Vectors DataFrame
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' x<-imcExperiment(cellIntensity=matrix(1,nrow=10,ncol=10),
 #' coordinates=matrix(1,nrow=10,ncol=2),

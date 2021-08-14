@@ -11,6 +11,9 @@ getDistance(object) <- value
 
 \item{value}{matrix rows cells, columns are distance measurements}
 }
+\value{
+imcExperiment container
+}
 \description{
 re-assigns the distance matrix (rows are cells)
 }

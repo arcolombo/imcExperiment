@@ -22,6 +22,17 @@ getNeighborhood(object) <- value
 
 \item{value}{matrix rows cells, columns are neighborhood histoCAT output}
 }
+\value{
+imcExperiment container
+
+imcExperiment container
+data(imcdata)
+getNeighborhood(imcdata)
+
+imcExperiment container
+
+imcExperiment container
+}
 \description{
 finds the neighborhood information.
 

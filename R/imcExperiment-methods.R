@@ -6,6 +6,7 @@
 #' @param object imcExperiment
 #' @param ... additional arguments
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' dim(cellIntensity(imcdata))
@@ -15,6 +16,7 @@ setGeneric("cellIntensity",
 #' @rdname cellIntensity
 #' @param object imcExperiment
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata);dim(cellIntensity(imcdata))
 #' head(t(cellIntensity(imcdata)))
@@ -26,12 +28,14 @@ setMethod("cellIntensity", "imcExperiment",
 #' @param object imc container
 #' @param value matrix rows protein, column are cells
 #' @export
+#' @return imcExperiment container
 setGeneric("cellIntensity<-",function(object,value) standardGeneric("cellIntensity<-"))
 
 #' @rdname cellIntensity
 #' @param object IMC container
 #' @param value matrix rows protein, columns are cells
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-asinh(counts(imcdata))
@@ -51,6 +55,7 @@ setMethod("cellIntensity<-",c("imcExperiment", "matrix"),
 #' @rdname getCoordinates
 #' @param object imcExperiment
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getCoordinates(imcdata)
@@ -60,6 +65,7 @@ setGeneric("getCoordinates",
 #' @rdname getCoordinates
 #' @param object imcExperiment
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getCoordinates(imcdata)
@@ -70,6 +76,7 @@ setMethod("getCoordinates", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are x,y
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-getCoordinates(imcdata)
@@ -80,6 +87,7 @@ setGeneric("getCoordinates<-",function(object,value) standardGeneric("getCoordin
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are x,y
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-getCoordinates(imcdata)
@@ -98,6 +106,7 @@ setMethod("getCoordinates<-",c("imcExperiment", "matrix"),
 #' @param object imcExperiment
 #' @param ... additional arguments
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getNeighborhood(imcdata)
@@ -107,6 +116,7 @@ setGeneric("getNeighborhood",
 #' @rdname getNeighborhood
 #' @param object imcExperiment container
 #' @export
+#' @return imcExperiment container
 #' data(imcdata)
 #' getNeighborhood(imcdata)
 setMethod("getNeighborhood", "imcExperiment",
@@ -118,6 +128,7 @@ setMethod("getNeighborhood", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are neighborhood histocat output
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-matrix(1,nrow=ncol(imcdata),ncol=2)
@@ -128,6 +139,7 @@ setGeneric("getNeighborhood<-",function(object,value) standardGeneric("getNeighb
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are neighborhood histoCAT output
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-matrix(1,nrow=ncol(imcdata),ncol=2)
@@ -146,6 +158,7 @@ setMethod("getNeighborhood<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getNetwork(imcdata)
@@ -156,6 +169,7 @@ setGeneric("getNetwork",
 #' @param object IMC container
 #' @aliases getNetwork imcExperiment-method
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getNetwork(imcdata)
@@ -167,6 +181,7 @@ setMethod("getNetwork", "imcExperiment",
 #' @param object is IMC container
 #' @param value data.frame rows cells, columns are phenograph network ID
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-data.frame(ID=seq_len(ncol(imcdata)))
@@ -178,6 +193,7 @@ setGeneric("getNetwork<-",function(object,value) standardGeneric("getNetwork<-")
 #' @param value matrix rows cells, columns are phenotype cluster ID
 #' @aliases getNetwork imcExperiment-method
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-data.frame(ID=seq_len(ncol(imcdata)))
@@ -197,6 +213,7 @@ setMethod("getNetwork<-",c("imcExperiment", "data.frame"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getDistance(imcdata)
@@ -207,6 +224,7 @@ setGeneric("getDistance",
 #' @rdname imcExperiment-class
 #' @aliases getDistance imcExperiment-method
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getDistance(imcdata)
@@ -217,6 +235,7 @@ setMethod("getDistance", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are distance measurements
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' newD<-matrix(1,nrow=ncol(imcdata),ncol=1)
@@ -226,6 +245,7 @@ setGeneric("getDistance<-",function(object,value) standardGeneric("getDistance<-
 #' @rdname imcExperiment-class
 #' @aliases getDistance imcExperiment-method
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' newD<-matrix(1,nrow=ncol(imcdata),ncol=1)
@@ -244,6 +264,7 @@ setMethod("getDistance<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getMorphology(imcdata)
@@ -254,6 +275,7 @@ setGeneric("getMorphology",
 #' @param object IMC container
 #' @aliases getMorphology imcExperiment-method
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getMorphology(imcdata)
@@ -264,6 +286,7 @@ setMethod("getMorphology", "imcExperiment",
 #' @param object is IMC container
 #' @param value matrix rows cells, columns are Area, Eccentricity, etc.
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-matrix(1,nrow=ncol(imcdata),ncol=4)
@@ -275,6 +298,7 @@ setGeneric("getMorphology<-",function(object,value) standardGeneric("getMorpholo
 #' @param value matrix rows cells, columns are Area, etc.
 #' @aliases spatial imcExperiment-method
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' x<-matrix(1,nrow=ncol(imcdata),ncol=4)
@@ -293,6 +317,7 @@ setMethod("getMorphology<-",c("imcExperiment", "matrix"),
 #' @rdname imcExperiment-class
 #' @param object imcExperiment
 #' @export
+#' @return imcExperiment container
 #' @examples
 #' data(imcdata)
 #' getLabel(imcdata)
@@ -362,6 +387,7 @@ setMethod("subsetCase", "imcExperiment",
 #' @param value vector of ROIID
 #' @param ... additional parameters
 #' @export
+#' @return imcExperiment container of selected cases
 #' @examples
 #' data(imcdata)
 #' myCases<-selectCases(imcdata,c("30-BM16-202_7Pre_s1_p1_r4_a4_ac","B17_350_14post_s1_p1_r5_a5_ac"))
@@ -375,6 +401,7 @@ setGeneric("selectCases",
 #' @param object IMC container
 #' @param value this is ROIID vector
 #' @export
+#' @return imcExperiment container of selected cases
 #' @examples
 #' data(imcdata)
 #' myCases<-selectCases(imcdata,c("30-BM16-202_7Pre_s1_p1_r4_a4_ac","B17_350_14post_s1_p1_r5_a5_ac"))

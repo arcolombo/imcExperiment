@@ -9,6 +9,9 @@
 \arguments{
 \item{object}{imcExperiment object, class imcExperiment container}
 }
+\value{
+imcExperiment container that has proper dimensions
+}
 \description{
 the rows are the panel names, the columns are the single cells,the column are the single cells to match the SCE designs (scRNA)
 }

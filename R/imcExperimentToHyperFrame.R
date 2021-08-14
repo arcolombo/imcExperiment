@@ -4,6 +4,7 @@
 #' @importFrom spatstat.geom hyperframe coords ppp unitname nncross
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
 #' @export
+#' @return a hyperframe of point patterns
 #' @examples
 #' data(imcdata)
 #' H<-imcExperimentToHyperFrame(imcExperiment=imcdata,phenotypeToUse = 1)
@@ -32,6 +33,7 @@ imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
 #' map to point pattern from imcExperiment class.
 #' @param caseExperiment the subset IMC experiment to cast into a point pattern
 #' @param phenotypeToUse the cluster id to annotate the pattern
+#' @return imcExperiment container converted to a point pattern set
 #' @importFrom spatstat.geom hyperframe coords ppp unitname unitname<-
 .imcExperimentToPPP<-function(caseExperiment=NULL,phenotypeToUse=1){
  ### for an imcExperiment for 1 case, creates a point pattern.

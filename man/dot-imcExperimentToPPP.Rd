@@ -11,6 +11,9 @@
 
 \item{phenotypeToUse}{the cluster id to annotate the pattern}
 }
+\value{
+imcExperiment container converted to a point pattern set
+}
 \description{
 map to point pattern from imcExperiment class.
 }

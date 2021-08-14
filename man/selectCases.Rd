@@ -16,6 +16,11 @@ selectCases(object, value, ...)
 
 \item{...}{additional parameters}
 }
+\value{
+imcExperiment container of selected cases
+
+imcExperiment container of selected cases
+}
 \description{
 subsets the imcExperiment to a case along with all slots for a selected multiple ROIs.
 
