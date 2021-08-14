@@ -193,8 +193,9 @@ head(  getCoordinates(x))
   pca_data <- prcomp(t(counts(x)), rank=50)
 tsDat<-data.frame(tsne.x=data$tSNE4148542692_1,tsne.y=data$tSNE4148542692_2,row.names=colnames(x))
 
-  reducedDims(x,withDimnames=TRUE) <- list(PCA=pca_data$x, TSNE=tsDat)
-   x
+reducedDims(x)<-list(PCA=pca_data$x,TSNE=tsDat)
+x
+reducedDimNames(x)
      dim(reducedDims(x)$PCA)
      dim(reducedDims(x)$TSNE)
 
