@@ -1,7 +1,8 @@
 Package: imcExperiment
-Title: Containerizes Cytometry Data, Analysis Workflow and Hypothesis Testing
+Title: imcExperiment: Image Mass Cytometry S4 Class Structure
 Version: 0.99.0
-Authors@R: person("Anthony", "Colombo", email = "anthonycolombo60@gmail.com", role="cre")
+Authors@R: person("Anthony", "Colombo", email = "anthonycolombo60@gmail.com", role=c("aut","cre"))
+Maintainer: Anthony Colombo <anthonycolombo60@gmail.com>
 Description: Containerizes cytometry data and allows for S4 class structure to extend slots related to cell morphology, coordinates, phenotype network information, and unique cellular labeling.
 Depends: R (>= 4.0),
 	SingleCellExperiment,
