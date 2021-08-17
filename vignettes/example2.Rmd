@@ -1,0 +1,509 @@
+---
+title: "imcExperiment: Applications and Beyond"
+author: "Anthony Colombo"
+output: 
+  html_vignette:
+  toc: true
+  number_sections: true
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{imcExperiment: containerization of IMC data}
+  \usepackage[utf8]{inputenc}   
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+---
+
+# Heatmap plotting script (helper)
+* The heatmap function we do not want to include with this package, but here is the helper function.
+```{r,fig.width=11,fig.height=11,message=FALSE}
+
+
+```
+
+# example
+* The IMC container contains slots for intensity, coordinates, neighborhood features, networking ID, distance measures, morphology, unique cell labels, panel information, and ROIID.
+*  The input to the imcExperiment object has the cells (columns) and rows are the proteins.  
+* For spatial features, the rows are the cells, and columns are the spatial features.  the 2-dim coordinates (x,y), neighborHood features, network assignment, unique Label, ROIID, and distance matrix.
+ These data are required for the constructure but can be edited later.
+* The IMC container inherits many function used for SummarizedExperiment classes (assays, etc).
+```{r,message=FALSE}
+ library(imcExperiment)
+ showClass("imcExperiment")
+
+  #10 cells with 10 proteins
+  # 10 neighbors 
+ # and square distance matrix
+ # note that for SCE objects the columns are the cells, and rows are proteins
+  x<-imcExperiment(cellIntensity=matrix(1,nrow=10,ncol=10),
+	coordinates=matrix(1,nrow=10,ncol=2),
+	neighborHood=matrix(1,nrow=10,ncol=10),
+	network=data.frame(matrix(1,nrow=10,ncol=10)),
+	distance=matrix(1,nrow=10,ncol=10),
+	morphology=matrix(1,nrow=10,ncol=10),
+	uniqueLabel=paste0("A",seq_len(10)),
+	panel=letters[1:10],
+	ROIID=data.frame(ROIID=rep("A",10)))
+  
+
+ #7 cells with 10 proteins
+ # but the spatial information is 10 rows and this will fail to build.
+ #x<-imcExperiment(cellIntensity=matrix(1,nrow=7,ncol=10),
+#	coordinates=matrix(1,nrow=10,ncol=2),
+#	neighborHood=matrix(1,nrow=10,ncol=20),
+#	network=matrix(1,nrow=10,ncol=3),
+#	distance=matrix(1,nrow=10,ncol=2),
+#	uniqueLabel=rep("A",10),
+#	ROIID=data.frame(ROIID=rep("A",10)))
+
+
+ 
+
+``` 
+
+### Accessors, and setters
+* the cellIntensity() function accesses cell Intensity
+* getCoordinates() accesses spatial data.
+* getNeighborhood() access the histoCAT neighborhood features
+* getDistance() accesses distance matrix input.
+* getMorphology() accesses morphology features.
+* the metadata() function can store extras .
+```{r access,eval=TRUE,message=FALSE}
+
+  #get cellintensities
+  cellIntensity(x)
+  #set intensities
+  newIn<-matrix(rnorm(100,2,5),nrow=10,ncol=10)
+  rownames(newIn)<-rownames(x)
+  colnames(newIn)<-colnames(x)
+   cellIntensity(x)<-newIn
+  cellIntensity(x)==newIn
+
+ # if we want to store both the raw and normalized values in assays we can.
+  assays(x,withDimnames = FALSE)$raw<-matrix(1,nrow=10,ncol=10)
+  #store the normalized values.
+   cellIntensity(x)<-asinh(counts(x)/0.5)
+   all(cellIntensity(x)==asinh(assays(x)$counts/0.5))
+  x
+
+
+
+ ## access the coordinates
+  getCoordinates(x)
+  getCoordinates(x)<-matrix(rnorm(20,0,10),nrow=10,ncol=2)
+head(  getCoordinates(x))
+  
+ ## access the neighborhood profile.  Note each row must equal the number of cells, but the columns can be extended depending on the radius of interactions.
+  ## access the coordinates
+  getNeighborhood(x)
+  getNeighborhood(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=10)
+ head( getNeighborhood(x))
+
+ ## get the distance usually a square matrix, or can be just first nearest etc. 
+    getDistance(x)
+  getDistance(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=10)
+  head(getDistance(x))
+
+ # get morphological features
+  getMorphology(x)
+  getMorphology(x)<-matrix(rnorm(100,1,5),nrow=10,ncol=60)
+  head(getMorphology(x))
+
+ ## for each cell we can obtain the ROI that it belongs to
+  rowData(x)
+ ## if we want to add patient features to each ROI we can
+  metas<-data.frame(ROIID=factor(rep("A",10)),treatment=factor(rep('none',10)))
+  colData(x)<-DataFrame(metas)
+
+ ##other slots for covariates
+   metadata(x)$experiment<-'test'
+   metadata(x)
+```
+
+### From histoCAT to R
+* We use the raw histoCAT output and containerize the data.
+```{r,message=FALSE}
+  ### load the data from package.
+  library(imcExperiment)
+ ##load the data 1000 cells from IMC experiment.
+  data(data)
+  dim(data)
+  ##output from histoCAT to R
+  expr<-data[,3:36]
+  normExp<-percentilenormalize(data=expr,percentile=0.99)
+  normExp<-as.matrix(normExp)
+
+
+  ##spatial component
+  spatial<-(data[,c("X_position","Y_position")])
+  spatial<-as.matrix(spatial)
+ ##uniqueLabel
+  uniqueLabel<-paste0(data[,"ImageId"],"_",data[,"CellId"])
+
+ phenotypes<-data[,grepl("Phenograph",colnames(data))]
+ morph<-as.matrix(data[,c("Area","Eccentricity",
+	"Solidity",
+	"Extent",
+	"Perimeter")])
+
+  x<-imcExperiment(cellIntensity=t(normExp),
+	coordinates=spatial,
+	neighborHood=as.matrix(data[,grepl("neighbour_",colnames(data))]),
+	network=phenotypes,
+	distance=matrix(1,nrow=nrow(data),ncol=10),
+	morphology=morph,
+	panel=colnames(normExp),
+	uniqueLabel=paste0(data$ImageId,"_",data$CellId),
+	ROIID=data.frame(ROIID=data$ImageId))
+
+ ## explore the container.
+  dim(assay(x))
+   colData(x)$treatment<-DataFrame(treatment=rep('none',1000))
+   head(colData(x))
+ head( colnames(x))
+  rownames(x)
+  
+  ## Intensity
+  all(t(cellIntensity(x))==normExp)
+  head(t(cellIntensity(x)))
+  ##coordinate
+  all(getCoordinates(x)==spatial)
+  head(getCoordinates(x))
+  #neighbor attraction data form histoCAT
+ all(getNeighborhood(x)==as.matrix(data[,grepl("neighbour_",colnames(data))]))
+ head(getNeighborhood((x)))
+ ##phenotype cluster ID
+  head(getNetwork(x))
+ all(getNetwork(x)==phenotypes)
+ ###distance calculations
+  head(getDistance(x))
+  ##morphology
+   all(getMorphology(x)==morph)
+  head(getMorphology(x))
+  ##uniqueLabel
+   head(getLabel(x))
+   all(getLabel(x)==paste0(data$ImageId,"_",data$CellId) )
+```
+
+
+### PCA demo analysis
+* PCA data and tSNE coordinates can be added to the container.
+```{r}
+ 
+
+ ### inherited accessor.
+  pca_data <- prcomp(t(counts(x)), rank=50)
+tsDat<-data.frame(tsne.x=data$tSNE4148542692_1,tsne.y=data$tSNE4148542692_2,row.names=colnames(x))
+
+reducedDims(x)<-list(PCA=pca_data$x,TSNE=tsDat)
+x
+reducedDimNames(x)
+     dim(reducedDims(x)$PCA)
+     dim(reducedDims(x)$TSNE)
+
+ imc<-x
+ x<-NULL
+```
+
+
+
+
+### IMC container and Phenograph cluster neighborhood 
+* Phenograph an IMC contrainer and heatmap result.
+```{r pheno,eval=FALSE,fig.width=11,fig.height=11,message=FALSE}
+
+ ### create  phenotypes via Rphenograph
+  ##run phenograph
+  library(Rphenograph)
+library(igraph)
+  phenos<-Rphenograph(t(cellIntensity(imc)),k=35)
+   pheno.labels<-as.numeric(igraph::membership(phenos[[2]]))
+   getNetwork(imc)<-data.frame(cell_clustering=pheno.labels)
+   head( getNetwork(imc))
+  ##plot phenograph
+  #plot_clustering_heatmap_wrapper(myExperiment=imc)
+```
+
+
+
+### histoCAT analysis
+* raw input from histoCAT and creating an IMC container.
+* containerizes the intensities, neighborhood results, morphology, and computes nearest distances and stores it.
+* Can use a hyperframe to identify distances quickly.
+```{r,fig.width=11,fig.height=11}
+
+### reading in a directory of histoCAT csv files.
+
+ ##need to reconstruct the fold revised IMC data.
+  ##merges a folder full of histoCAT csv files.
+ # use morphology and the 1-10 neighbors.
+  dataSet<-NULL
+ for(i in c("case8.csv","case5.csv")){
+  message(i)
+    fpath <- system.file("extdata", i, package="imcExperiment")
+    case1<-read.csv(fpath)
+   proteins<-colnames(case1)[grepl("Cell_",colnames(case1))]
+   neig<-colnames(case1)[grepl("neighbour_",colnames(case1))][1:10]
+    case1<-case1[,c("ImageId","CellId","X_position","Y_position",proteins,
+                    "Area",
+                    "Eccentricity",
+	"Solidity",
+	"Extent",
+	"Perimeter",
+	 neig)]
+    dataSet<-rbind(dataSet,case1)
+  }
+ 
+ expr<-dataSet[,proteins]
+  normExp<-percentilenormalize(data=expr,percentile=0.99)
+  normExp<-as.matrix(normExp)
+  boxplot(normExp)
+
+  ##spatial component
+  spatial<-(dataSet[,c("X_position","Y_position")])
+  spatial<-as.matrix(spatial)
+ ##uniqueLabel
+  uniqueLabel<-paste0(dataSet[,"ImageId"],"_",dataSet[,"CellId"])
+
+  ##not yet assigned
+  phenotypes<-matrix(0,nrow(dataSet),1)
+  ROIID=data.frame(ROIID=dataSet[,"ImageId"])
+  morph<-dataSet[,c("Area",
+                    "Eccentricity",
+	"Solidity",
+	"Extent",
+	"Perimeter")]
+  
+  x<-imcExperiment(cellIntensity=t(normExp),
+	coordinates=spatial,
+	neighborHood=as.matrix(dataSet[,grepl("neighbour_",colnames(dataSet))]),
+	network=phenotypes,
+	distance=matrix(1,nrow=nrow(dataSet),ncol=10),
+	morphology=morph,
+	panel=colnames(normExp),
+	uniqueLabel=uniqueLabel,
+	ROIID=ROIID)
+   x
+   
+   
+   #require(Rphenograph); library(igraph)
+  #phenos<-Rphenograph(t(cellIntensity(x)),k=35)
+  # pheno.labels<-as.numeric(membership(phenos[[2]]))
+  # getNetwork(x)<-data.frame(cell_clustering=pheno.labels)
+  #  head(getNetwork(x))
+ ##plot phenograph
+  #plot_clustering_heatmap_wrapper(myExperiment=x)
+```
+
+### Access unique cell ID
+* getLabel(), we can access unique cell ID
+* subsetCase(x,ROIID) can subset to a single ROIID
+* selectCases(x,c("ROI1","ROI2","ROI3")) selects a subset of multiple ROIs.
+```{r}
+ ##store the ROIID in the metadata columns.
+  ##access the unique cell labels.
+
+  tail(getLabel(x))
+  
+  roi<-subsetCase(x,372149 )
+  roi
+  table(sapply(strsplit(getLabel(roi),"_"),function(x) x[1]))
+```
+
+## Distance computations speedily
+* The function 'imcExperimentToHyperFrame(), creates a point pattern useful for distance measures.
+* Given a hyperframe pairwise computations can be done.
+
+```{r}
+
+
+  ##you can append more clinical features to the columns of the sampleDat data.frame.
+  H<-imcExperimentToHyperFrame(imcExperiment=x,phenotypeToUse = 1)
+  helper<-function(pp=NULL,i=NULL,j=NULL){
+  ps<-split(pp)
+  nnd<-nncross(ps[[i]],ps[[j]])
+  }
+ ## 1-NN analysis.
+  ## compare cluster 10 to cluster 9
+   #eachNND<-with(H,helper(pp=point,i="10",j="8"))
+ ## first choose 2 clusters to compare.
+ # sapply(eachNND,function(x) mean(x[,"dist"]))
+
+
+
+```
+
+
+### Changing class from IMC to SummarizedExperiment
+* IMC container can change to SummarizedExperiment and the FlowSOM algorithm can be used for cell classification.
+```{r classChange,eval=FALSE,fig.width=9,fig.height=9,message=FALSE}
+  library(CATALYST)
+library(cowplot)
+library(flowCore)
+library(ggplot2)
+library(SingleCellExperiment)
+library(diffcyt)
+
+ ## from IMCexperiment to SCE
+ sce<- SingleCellExperiment(x)
+ class(sce)
+
+ ## FIX ME: add the SOM algorithms for over-clustering and meta-clustering by using class inheritance. 
+
+ #### for the cytof, the columns are sample info and the rows are cells. it uses the SummarizedExperiment format.
+ 
+ 
+
+ ## change into a flowFrame?
+
+ ## change into a daFrame (CATALYST)
+
+ #data("data")
+
+ 
+ rd<-DataFrame(colData(imcData))
+
+  marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imcData),"_"),function(x) x[3]),
+              marker_name=rownames(imcData),
+              marker_class=c(rep("type",13),
+                             rep("state",18),
+                             rep("none",13)))
+
+  ## Switching into Summarized Experiment class.
+    dse<-SummarizedExperiment(assays=SimpleList(exprs=t(cellIntensity(imcData))),
+                           rowData=rd,
+                           colData=DataFrame(marker_info)
+                           )
+   stopifnot(all(colnames(dse)==marker_info$marker_name))
+   dse
+
+ # Transform data recommended
+ dse <- transformData(dse)
+## maybe look a the normalization.
+# Generate clusters
+dse <- (generateClusters(dse,meta_clustering=TRUE,meta_k=30,seed_clustering=828))
+
+ ## examine each cluster.
+cluster<-rowData(dse)
+ data<-data.frame(t(logcounts(imcData)),cluster)
+ #plot_matrix_heatmap_wrapper(expr=data[,rownames(imcData)],
+  #                               cell_clustering=data$cluster_id)
+ #
+ 
+
+```
+
+
+## IMC and flowSet conversions
+* utilize CATALYST package for IMC we can see scatter plots after converting to FlowSets.
+* the rownames for IMC are set to the panel names, and we can split these to create the marker and metal.
+* The ROIID is useful for quickly creating a FlowSet object as a class inheritance method.
+* The rownames of IMC container are usually in "Cell_Marker_ChannelMetal"
+```{r, eval=FALSE,message=FALSE}
+
+
+   ## the assay returns matrix class! required for CATALYST.
+  is(assay(imcData,'counts'),'matrix')
+  rownames(imcData)
+    # for plot scatter to work need to set the rowData feature in a specific way.
+   channel<-sapply(strsplit(rownames(imcData),"_"),function(x) x[3])
+      channel[34:35]<-c("Ir1911","Ir1931")
+
+   marker<-sapply(strsplit(rownames(imcData),"_"),function(x) x[2])
+    rowData(imcData)<-DataFrame(channel_name=channel,marker_name=marker)
+      rownames(imcData)<-marker
+            plotScatter(imcData,rownames(imcData)[17:18],assay='counts')
+
+  # convert to flowSet
+             ## the warning has to do with duplicated Iridium channels.
+   table(colData(imcData)$ROIID)
+       (fsimc <- sce2fcs(imcData, split_by = "ROIID"))
+    ## now we have a flowSet.
+   pData(fsimc)
+   fsApply(fsimc,nrow)
+   dim(exprs(fsimc[[1]]))
+   exprs(fsimc[[1]])[1:5,1:5]
+    ## set up the metadata files.
+   head(marker_info)
+   
+    exper_info<-data.frame(group_id=colData(imcData)$Treatment[match(pData(fsimc)$name,colData(imcData)$ROIID)],
+                           patient_id=colData(imcData)$Patient.Number[match(pData(fsimc)$name,colData(imcData)$ROIID)],
+                           sample_id=pData(fsimc)$name)
+   
+   ## create design
+   design<-createDesignMatrix(
+     exper_info,cols_design=c("group_id","patient_id"))
+   
+   ##set up contrast 
+   contrast<-createContrast(c(0,1,0))
+   nrow(contrast)==ncol(design)
+   data.frame(parameters=colnames(design),contrast)
+   
+    ## flowSet to DiffCyt
+    out_DA<-diffcyt(
+      d_input=fsimc,
+      experiment_info=exper_info,
+      marker_info=marker_info,
+      design=design,
+      contrast=contrast,
+      analysis_type = "DA",
+      seed_clustering = 123
+    )
+   topTable(out_DA,format_vals = TRUE)
+   
+   out_DS<-diffcyt(
+     d_input=fsimc,
+     experiment_info=exper_info,
+     marker_info=marker_info,
+     design=design,
+     contrast=contrast,
+     analysis_type='DS',
+     seed_clustering = 123,
+     plot=FALSE)
+   
+      topTable(out_DS,format_vals = TRUE)
+      
+       ### from flowSet to SE.
+ d_se<-prepareData(fsimc,exper_info,marker_info)
+
+
+
+```
+
+### Diffcyt package tutorial (extra)
+* Given a flowSet object we can utilize the diffCyt package for measuring phenotype differences.
+* This code section is an example of diffcyt from their manual.
+* Creates a random summarized experiment.
+```{r diffcyt,eval=FALSE}
+ library(diffcyt)
+# Function to create random data (one sample)
+d_random <- function(n = 20000, mean = 0, sd = 1, ncol = 20, cofactor = 5) {
+  d <- sinh(matrix(rnorm(n, mean, sd), ncol = ncol)) * cofactor
+  colnames(d) <- paste0("marker", sprintf("%02d", 1:ncol))
+  d
+}
+# Create random data (without differential signal)
+set.seed(123)
+d_input <- list(
+  sample1 = d_random(), 
+  sample2 = d_random(), 
+  sample3 = d_random(), 
+  sample4 = d_random()
+)
+experiment_info <- data.frame(
+  sample_id = factor(paste0("sample", 1:4)), 
+  group_id = factor(c("group1", "group1", "group2", "group2")), 
+  stringsAsFactors = FALSE
+)
+marker_info <- data.frame(
+  channel_name = paste0("channel", sprintf("%03d", 1:20)), 
+  marker_name = paste0("marker", sprintf("%02d", 1:20)), 
+  marker_class = factor(c(rep("type", 10), rep("state", 10)), 
+                        levels = c("type", "state", "none")), 
+  stringsAsFactors = FALSE
+)
+# Prepare data
+d_se <- prepareData(d_input, experiment_info, marker_info)
+# Transform data
+d_se <- transformData(d_se)
+# Generate clusters
+d_se <- generateClusters(d_se)
+```
