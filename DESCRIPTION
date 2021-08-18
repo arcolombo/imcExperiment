@@ -1,5 +1,5 @@
 Package: imcExperiment
-Title: Mass Cytometry S4 Class Structure And Pipeline For Images
+Title: Mass Cytometry S4 Class Structure Pipeline For Images
 Version: 0.99.0
 Authors@R: person("Anthony", "Colombo", email = "anthonycolombo60@gmail.com", role=c("aut","cre"))
 Maintainer: Anthony Colombo <anthonycolombo60@gmail.com>

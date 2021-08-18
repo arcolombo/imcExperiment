@@ -359,16 +359,16 @@ library(diffcyt)
  #data("data")
 
  
- rd<-DataFrame(colData(imcData))
+ rd<-DataFrame(colData(imcdata))
 
-  marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imcData),"_"),function(x) x[3]),
-              marker_name=rownames(imcData),
+  marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imcdata),"_"),function(x) x[3]),
+              marker_name=rownames(imcdata),
               marker_class=c(rep("type",13),
                              rep("state",18),
                              rep("none",13)))
 
   ## Switching into Summarized Experiment class.
-    dse<-SummarizedExperiment(assays=SimpleList(exprs=t(cellIntensity(imcData))),
+    dse<-SummarizedExperiment(assays=SimpleList(exprs=t(cellIntensity(imcdata))),
                            rowData=rd,
                            colData=DataFrame(marker_info)
                            )
@@ -383,8 +383,8 @@ dse <- (generateClusters(dse,meta_clustering=TRUE,meta_k=30,seed_clustering=828)
 
  ## examine each cluster.
 cluster<-rowData(dse)
- data<-data.frame(t(logcounts(imcData)),cluster)
- #plot_matrix_heatmap_wrapper(expr=data[,rownames(imcData)],
+ data<-data.frame(t(logcounts(imcdata)),cluster)
+ #plot_matrix_heatmap_wrapper(expr=data[,rownames(imcdata)],
   #                               cell_clustering=data$cluster_id)
  #
  
@@ -401,21 +401,21 @@ cluster<-rowData(dse)
 
 
    ## the assay returns matrix class! required for CATALYST.
-  is(assay(imcData,'counts'),'matrix')
-  rownames(imcData)
+  is(assay(imcdata,'counts'),'matrix')
+  rownames(imcdata)
     # for plot scatter to work need to set the rowData feature in a specific way.
-   channel<-sapply(strsplit(rownames(imcData),"_"),function(x) x[3])
+   channel<-sapply(strsplit(rownames(imcdata),"_"),function(x) x[3])
       channel[34:35]<-c("Ir1911","Ir1931")
 
-   marker<-sapply(strsplit(rownames(imcData),"_"),function(x) x[2])
-    rowData(imcData)<-DataFrame(channel_name=channel,marker_name=marker)
-      rownames(imcData)<-marker
-            plotScatter(imcData,rownames(imcData)[17:18],assay='counts')
+   marker<-sapply(strsplit(rownames(imcdata),"_"),function(x) x[2])
+    rowData(imcdata)<-DataFrame(channel_name=channel,marker_name=marker)
+      rownames(imcdata)<-marker
+            plotScatter(imcdata,rownames(imcdata)[17:18],assay='counts')
 
   # convert to flowSet
              ## the warning has to do with duplicated Iridium channels.
-   table(colData(imcData)$ROIID)
-       (fsimc <- sce2fcs(imcData, split_by = "ROIID"))
+   table(colData(imcdata)$ROIID)
+       (fsimc <- sce2fcs(imcdata, split_by = "ROIID"))
     ## now we have a flowSet.
    pData(fsimc)
    fsApply(fsimc,nrow)
@@ -424,8 +424,8 @@ cluster<-rowData(dse)
     ## set up the metadata files.
    head(marker_info)
    
-    exper_info<-data.frame(group_id=colData(imcData)$Treatment[match(pData(fsimc)$name,colData(imcData)$ROIID)],
-                           patient_id=colData(imcData)$Patient.Number[match(pData(fsimc)$name,colData(imcData)$ROIID)],
+    exper_info<-data.frame(group_id=colData(imcdata)$Treatment[match(pData(fsimc)$name,colData(imcdata)$ROIID)],
+                           patient_id=colData(imcdata)$Patient.Number[match(pData(fsimc)$name,colData(imcdata)$ROIID)],
                            sample_id=pData(fsimc)$name)
    
    ## create design
