@@ -1,0 +1,60 @@
+"","ImageId","Name","Patient.Number","Treatment","Pano","ROI","Tissue.Type","Age","Cytogenetics","TMA","batch","ROIID","sample_id","condition","patient_id"
+"19",142396,"ROIID_1",10,"POST",1,1,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_1","ROIID_1","POST",10
+"20",714925,"ROIID_2",10,"POST",2,2,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_2","ROIID_2","POST",10
+"21",960946,"ROIID_3",10,"POST",2,3,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_3","ROIID_3","POST",10
+"22",796815,"ROIID_4",10,"POST",2,4,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_4","ROIID_4","POST",10
+"23",203338,"ROIID_5",7,"PRE",1,1,"BM",54,"+1q",2,"batch2","ROIID_5","ROIID_5","PRE",7
+"24",893497,"ROIID_6",7,"PRE",1,2,"BM",54,"+1q",2,"batch2","ROIID_6","ROIID_6","PRE",7
+"25",439269,"ROIID_7",7,"PRE",1,3,"BM",54,"+1q",2,"batch2","ROIID_7","ROIID_7","PRE",7
+"26",636895,"ROIID_8",7,"PRE",1,4,"BM",54,"+1q",2,"batch2","ROIID_8","ROIID_8","PRE",7
+"27",659474,"ROIID_9",7,"PRE",1,5,"BM",54,"+1q",2,"batch2","ROIID_9","ROIID_9","PRE",7
+"28",984343,"ROIID_10",7,"POST",1,1,"BM",54,"+1q",2,"batch2","ROIID_10","ROIID_10","POST",7
+"29",513859,"ROIID_11",7,"POST",1,2,"BM",54,"+1q",2,"batch2","ROIID_11","ROIID_11","POST",7
+"30",902189,"ROIID_12",7,"POST",1,3,"BM",54,"+1q",2,"batch2","ROIID_12","ROIID_12","POST",7
+"31",656906,"ROIID_13",7,"POST",1,4,"BM",54,"+1q",2,"batch2","ROIID_13","ROIID_13","POST",7
+"32",754450,"ROIID_14",7,"POST",2,5,"BM",54,"+1q",2,"batch2","ROIID_14","ROIID_14","POST",7
+"33",40537,"ROIID_32",9,"PRE",1,2,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_32","ROIID_32","PRE",9
+"34",747014,"ROIID_33",9,"PRE",1,3,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_33","ROIID_33","PRE",9
+"35",319578,"ROIID_34",9,"PRE",1,6,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_34","ROIID_34","PRE",9
+"36",93881,"ROIID_35",9,"PRE",2,4,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_35","ROIID_35","PRE",9
+"37",846973,"ROIID_36",9,"PRE",2,5,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_36","ROIID_36","PRE",9
+"38",123519,"ROIID_15",9,"POST",1,2,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_15","ROIID_15","POST",9
+"39",689337,"ROIID_16",9,"POST",1,3,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_16","ROIID_16","POST",9
+"40",374506,"ROIID_17",9,"POST",1,4,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_17","ROIID_17","POST",9
+"41",560284,"ROIID_18",9,"POST",1,5,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_18","ROIID_18","POST",9
+"42",823902,"ROIID_19",9,"POST",1,6,"BM",62,"1q+,t(11,14)",3,"batch2","ROIID_19","ROIID_19","POST",9
+"43",740522,"ROIID_28",10,"PRE",1,1,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_28","ROIID_28","PRE",10
+"44",232059,"ROIID_29",10,"PRE",1,2,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_29","ROIID_29","PRE",10
+"45",290829,"ROIID_30",10,"PRE",1,3,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_30","ROIID_30","PRE",10
+"46",167724,"ROIID_31",10,"PRE",1,4,"BM",52,"-13,+9,+11,+15",3,"batch2","ROIID_31","ROIID_31","PRE",10
+"47",294824,"ROIID_20",11,"PRE",2,1,"BM",73,"+1q, +9, +11,+15, +17 del and TP53 partial IgH",3,"batch3","ROIID_20","ROIID_20","PRE",11
+"49",1003173,"ROIID_22",11,"POST",2,2,"BM",73,"+1q, +9, +11,+15, +17 del and TP53 partial IgH",3,"batch3","ROIID_22","ROIID_22","POST",11
+"50",508693,"ROIID_23",12,"PRE",1,1,"BM",75,"Normal",3,"batch2","ROIID_23","ROIID_23","PRE",12
+"51",752426,"ROIID_24",12,"PRE",1,2,"BM",75,"Normal",3,"batch2","ROIID_24","ROIID_24","PRE",12
+"52",621029,"ROIID_25",12,"PRE",1,3,"BM",75,"Normal",3,"batch2","ROIID_25","ROIID_25","PRE",12
+"53",183415,"ROIID_26",12,"PRE",1,4,"BM",75,"Normal",3,"batch2","ROIID_26","ROIID_26","PRE",12
+"54",886753,"ROIID_27",12,"POST",1,1,"BM",75,"Normal",3,"batch2","ROIID_27","ROIID_27","POST",12
+"55",569433,"ROIID_37",5,"PRE",4,1,"CLOT",66,"+5,+17",1,"batch3","ROIID_37","ROIID_37","PRE",5
+"56",105477,"ROIID_38",5,"PRE",4,2,"CLOT",66,"+5,+17",1,"batch3","ROIID_38","ROIID_38","PRE",5
+"57",792227,"ROIID_39",5,"PRE",4,3,"CLOT",66,"+5,+17",1,"batch3","ROIID_39","ROIID_39","PRE",5
+"58",684451,"ROIID_40",5,"PRE",4,4,"CLOT",66,"+5,+17",1,"batch3","ROIID_40","ROIID_40","PRE",5
+"59",402768,"ROIID_41",5,"POST",2,1,"CLOT",66,"+5,+17",1,"batch3","ROIID_41","ROIID_41","POST",5
+"60",607862,"ROIID_42",5,"POST",2,2,"CLOT",66,"+5,+17",1,"batch3","ROIID_42","ROIID_42","POST",5
+"61",511016,"ROIID_43",5,"POST",2,3,"CLOT",66,"+5,+17",1,"batch3","ROIID_43","ROIID_43","POST",5
+"62",706916,"ROIID_44",5,"POST",2,4,"CLOT",66,"+5,+17",1,"batch3","ROIID_44","ROIID_44","POST",5
+"63",601089,"ROIID_48",14,"POST",1,1,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_48","ROIID_48","POST",14
+"64",35409,"ROIID_49",14,"POST",1,2,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_49","ROIID_49","POST",14
+"65",788085,"ROIID_50",14,"POST",1,3,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_50","ROIID_50","POST",14
+"66",721891,"ROIID_51",14,"POST",1,4,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_51","ROIID_51","POST",14
+"67",1047542,"ROIID_52",14,"POST",1,5,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_52","ROIID_52","POST",14
+"68",592018,"ROIID_45",14,"PRE",1,1,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_45","ROIID_45","PRE",14
+"69",96032,"ROIID_46",14,"PRE",1,2,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_46","ROIID_46","PRE",14
+"70",134366,"ROIID_47",14,"PRE",1,3,"BM",59,"1q+, t(11;14), complex vt(11;14)",3,"batch2","ROIID_47","ROIID_47","PRE",14
+"71",85292,"ROIID_53",1,"PRE",1,1,"BM",56,"Normal",1,"batch1","ROIID_53","ROIID_53","PRE",1
+"72",621460,"ROIID_54",1,"POST",1,1,"BM",56,"Normal",1,"batch1","ROIID_54","ROIID_54","POST",1
+"73",123809,"ROIID_55",13,"POST",1,1,"BM",80,"1q+, +5 and 11q+",3,"batch1","ROIID_55","ROIID_55","POST",13
+"74",968151,"ROIID_56",13,"POST",1,2,"BM",80,"1q+, +5 and 11q+",3,"batch1","ROIID_56","ROIID_56","POST",13
+"75",628304,"ROIID_57",13,"PRE",1,2,"BM",80,"1q+, +5 and 11q+",3,"batch1","ROIID_57","ROIID_57","PRE",13
+"76",104652,"ROIID_58",13,"PRE",1,3,"BM",80,"1q+, +5 and 11q+",3,"batch1","ROIID_58","ROIID_58","PRE",13
+"77",552182,"ROIID_59",13,"PRE",2,4,"BM",80,"1q+, +5 and 11q+",3,"batch1","ROIID_59","ROIID_59","PRE",13
+"78",232519,"ROIID_60",13,"PRE",2,5,"BM",80,"1q+, +5 and 11q+",3,"batch1","ROIID_60","ROIID_60","PRE",13
