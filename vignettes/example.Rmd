@@ -228,7 +228,7 @@ library(igraph)
 * raw input from histoCAT and creating an IMC container.
 * containerizes the intensities, neighborhood results, morphology, and computes nearest distances and stores it.
 * Can use a hyperframe to identify distances quickly.
-```{r,fig.width=11,fig.height=11}
+```{r,fig.width=7,fig.height=7}
 
 ### reading in a directory of histoCAT csv files.
 
