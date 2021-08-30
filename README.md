@@ -7,6 +7,7 @@ Containerizing IMC data into the SummarizedExperiment class, this container inhe
  library(CATALYST)
  library(diffcyt)
  library(imcExperiment)
+ library(flowCore)
  data(imcdata)
  head(rownames(imcdata))
  imcData<-imcdata
@@ -27,6 +28,11 @@ Containerizing IMC data into the SummarizedExperiment class, this container inhe
    dim(exprs(fsimc[[1]]))
    exprs(fsimc[[1]])[1:5,1:5]
   ## set up the metadata files.
+  marker_info<-data.frame(channel_name=sapply(strsplit(rownames(imcdata),"_"),function(x) x[3]),
+                        marker_name=rownames(imcdata),
+                        marker_class=c(rep("type",13),
+                                       rep("state",18),
+                                       rep("none",13)))
   head(marker_info)
    
    exper_info<-data.frame(group_id=colData(imcData)$Treatment[match(pData(fsimc)$name,
