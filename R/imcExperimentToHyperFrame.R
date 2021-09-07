@@ -15,7 +15,7 @@ imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
   HH<-NULL
   for(i in unique(colData(imcExperiment)[,"ROIID"])){
    roi<-subsetCase(imcExperiment,i)
-   pp<-.imcExperimentToPPP(caseExperiment=roi)
+   pp<-.imcExperimentToPPP(caseExperiment=roi,phenotypeToUse=phenotypeToUse)
   stopifnot(all(all(coords(pp)==getCoordinates(roi))))
   #first<-split(pp,marks(pp))
   #pp<-first
@@ -35,7 +35,7 @@ imcExperimentToHyperFrame<-function(imcExperiment=NULL,phenotypeToUse=1){
 #' @param phenotypeToUse the cluster id to annotate the pattern
 #' @return imcExperiment container converted to a point pattern set
 #' @importFrom spatstat.geom hyperframe coords ppp unitname unitname<-
-.imcExperimentToPPP<-function(caseExperiment=NULL,phenotypeToUse=1){
+.imcExperimentToPPP<-function(caseExperiment=NULL,phenotypeToUse=NULL){
  ### for an imcExperiment for 1 case, creates a point pattern.
   casePositions<-getCoordinates(caseExperiment)
   marksCase<-factor(getNetwork(caseExperiment)[,phenotypeToUse])
