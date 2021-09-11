@@ -4,7 +4,7 @@
 \alias{.imcExperimentToPPP}
 \title{map to point pattern from imcExperiment class.}
 \usage{
-.imcExperimentToPPP(caseExperiment = NULL, phenotypeToUse = 1)
+.imcExperimentToPPP(caseExperiment = NULL, phenotypeToUse = NULL)
 }
 \arguments{
 \item{caseExperiment}{the subset IMC experiment to cast into a point pattern}
